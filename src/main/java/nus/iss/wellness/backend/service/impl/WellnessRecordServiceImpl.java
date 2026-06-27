@@ -46,7 +46,7 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
     @Override
     public WellnessRecordResponse getRecordById(Long id) {
         WellnessRecord record = wellnessRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Record not found with id: " + id));
+                .orElseThrow(() -> new nus.iss.wellness.backend.exception.ResourceNotFoundException("Record not found with id: " + id));
         return WellnessRecordResponse.from(record);
     }
 
