@@ -71,6 +71,9 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
 
     @Override
     public void deleteRecord(Long id) {
+        if (!wellnessRecordRepository.existsById(id)) {
+            throw new nus.iss.wellness.backend.exception.ResourceNotFoundException("Record not found with id: " + id);
+        }
         wellnessRecordRepository.deleteById(id);
     }
 }
