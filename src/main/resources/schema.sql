@@ -7,12 +7,12 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- Drop tables in reverse dependency order
-DROP TABLE IF EXISTS leave_application;
-DROP TABLE IF EXISTS leave_balances;
-DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS leave_types;
-DROP TABLE IF EXISTS public_holidays;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_profile;
+DROP TABLE IF EXISTS wellness_records;
+DROP TABLE IF EXISTS ai_recommendations;
+DROP TABLE IF EXISTS chat_sessions;
+DROP TABLE IF EXISTS chat_messages;
 
 -- Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
