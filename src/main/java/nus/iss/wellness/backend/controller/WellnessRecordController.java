@@ -28,9 +28,18 @@ public class WellnessRecordController {
     @GetMapping("/records")
     public ResponseEntity<List<WellnessRecordResponse>> getRecords(
             @RequestParam Long userId,
-            @RequestParam(required = false) WellnessRecord.Category category) {
-        List<WellnessRecordResponse> records = (category != null)
-                ? wellnessRecordService.getRecordsByUserAndCategory(userId, category)
+            @RequestParam(required = false) String category) {
+        WellnessRecord.Category categoryEnum = null;
+        if (category != null) {
+            try {
+                categoryEnum = WellnessRecord.Category.valueOf(category);
+            } catch (IllegalArgumentException ex) {
+                throw new nus.iss.wellness.backend.exception.BadRequestException("Invalid category: " + category);
+            }
+        }
+
+        List<WellnessRecordResponse> records = (categoryEnum != null)
+                ? wellnessRecordService.getRecordsByUserAndCategory(userId, categoryEnum)
                 : wellnessRecordService.getRecordsByUser(userId);
         return ResponseEntity.ok(records);
     }
