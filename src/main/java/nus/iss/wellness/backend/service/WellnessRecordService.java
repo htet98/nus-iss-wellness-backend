@@ -1,5 +1,8 @@
 package nus.iss.wellness.backend.service;
 
-public interface WellnessRecordService {
+import nus.iss.wellness.backend.dto.request.AddWellnessRecordRequest;
+import nus.iss.wellness.backend.model.WellnessRecord;
 
+public interface WellnessRecordService {
+    WellnessRecord addWellnessRecord(AddWellnessRecordRequest request);
 }
