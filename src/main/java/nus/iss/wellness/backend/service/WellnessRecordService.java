@@ -6,3 +6,4 @@ import nus.iss.wellness.backend.dto.response.WellnessRecordResponse;
 public interface WellnessRecordService {
     WellnessRecordResponse createRecord(WellnessRecordRequest request);
 }
+//

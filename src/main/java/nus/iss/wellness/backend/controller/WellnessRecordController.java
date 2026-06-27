@@ -22,3 +22,4 @@ public class WellnessRecordController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
+//

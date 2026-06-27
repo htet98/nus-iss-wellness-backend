@@ -28,3 +28,4 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
         return WellnessRecordResponse.from(wellnessRecordRepository.save(record));
     }
 }
+//
