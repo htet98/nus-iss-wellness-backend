@@ -53,7 +53,12 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
     @Override
     public WellnessRecordResponse updateRecord(Long id, WellnessRecordRequest request) {
         WellnessRecord record = wellnessRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Record not found with id: " + id));
+                .orElseThrow(() -> new nus.iss.wellness.backend.exception.ResourceNotFoundException("Record not found with id: " + id));
+
+        if (!record.getUserId().equals(request.getUserId())) {
+            throw new nus.iss.wellness.backend.exception.BadRequestException("userId cannot be changed for an existing record");
+        }
+
         record.setCategory(request.getCategory());
         record.setValue(request.getValue());
         record.setCaloriesBurned(request.getCaloriesBurned());
