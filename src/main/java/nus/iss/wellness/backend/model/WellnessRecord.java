@@ -1,59 +1,7 @@
 package nus.iss.wellness.backend.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.Table;
 
-@Entity
 @Table(name = "wellness_records")
 public class WellnessRecord {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(name = "activity_type", nullable = false)
-    private String activityType;
-
-    @Column(name = "record_date", nullable = false)
-    private LocalDate recordDate;
-
-    @Column(name = "duration_minutes")
-    private Integer durationMinutes;
-
-    @Column(name = "notes", length = 1000)
-    private String notes;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public String getActivityType() { return activityType; }
-    public void setActivityType(String activityType) { this.activityType = activityType; }
-
-    public LocalDate getRecordDate() { return recordDate; }
-    public void setRecordDate(LocalDate recordDate) { this.recordDate = recordDate; }
-
-    public Integer getDurationMinutes() { return durationMinutes; }
-    public void setDurationMinutes(Integer durationMinutes) { this.durationMinutes = durationMinutes; }
-
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

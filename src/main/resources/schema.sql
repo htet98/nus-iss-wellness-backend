@@ -8,7 +8,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Drop tables in reverse dependency order
 DROP TABLE IF EXISTS leave_application;
-DROP TABLE IF EXISTS wellness_records;
 DROP TABLE IF EXISTS leave_balances;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS leave_types;
@@ -59,14 +58,22 @@ CREATE TABLE IF NOT EXISTS user_profile
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS wellness_records
 (
-    id                BIGINT       NOT NULL AUTO_INCREMENT,
-    user_id           BIGINT       NOT NULL,
-    activity_type     VARCHAR(100) NOT NULL,
-    record_date       DATE         NOT NULL,
-    duration_minutes  INT          NULL,
-    notes             TEXT         NULL,
-    created_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    id               BIGINT                                        NOT NULL AUTO_INCREMENT,
+    user_id          BIGINT                                        NOT NULL,
+    category         ENUM ('sleep','exercise','mood','water','steps') NOT NULL,
+    value            DOUBLE                                        NOT NULL,
+    calories_burned  DOUBLE                                        NULL,
+    unit             VARCHAR(20)                                   NULL,
+    duration_minutes INT                                           NULL,
+    record_date      DATE                                          NOT NULL,
+    notes            TEXT                                          NULL,
+    created_at       TIMESTAMP                                     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX idx_wellness_user_date (user_id, record_date DESC),
+    INDEX idx_wellness_category (user_id, category),
+    CONSTRAINT fk_wellness_user
+        FOREIGN KEY (user_id) REFERENCES users (user_id)
+            ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;

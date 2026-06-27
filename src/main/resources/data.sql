@@ -31,17 +31,75 @@ VALUES
 -- ──────────────────────────────────────────────────────────────
 -- Wellness Records — Alice (user_id = 1)
 -- ──────────────────────────────────────────────────────────────
--- Wellness Records
-INSERT IGNORE INTO wellness_records (user_id, activity_type, record_date, duration_minutes, notes)
+INSERT IGNORE INTO wellness_records (user_id, category, value, calories_burned, unit, duration_minutes, record_date, notes)
 VALUES
-    (1, 'Running',  CURDATE() - INTERVAL 6 DAY, 30, 'Morning run at the park'),
-    (1, 'Cycling',  CURDATE() - INTERVAL 5 DAY, 45, 'Evening ride'),
-    (1, 'Swimming', CURDATE() - INTERVAL 4 DAY, 60, 'Lap swimming at the pool'),
-    (1, 'Yoga',     CURDATE() - INTERVAL 3 DAY, 40, 'Stretch and relax'),
-    (1, 'Walking',  CURDATE() - INTERVAL 2 DAY, 25, 'Walk around the neighbourhood'),
-    (2, 'Running',  CURDATE() - INTERVAL 5 DAY, 35, NULL),
-    (3, 'Yoga',     CURDATE() - INTERVAL 4 DAY, 45, 'Morning yoga');
+    -- Sleep
+    (1, 'sleep',    7.5,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 6 DAY,  'Felt well rested'),
+    (1, 'sleep',    6.0,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 5 DAY,  'Woke up once during night'),
+    (1, 'sleep',    8.0,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 4 DAY,  'Great sleep'),
+    (1, 'sleep',    5.5,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 3 DAY,  'Stressed, could not sleep well'),
+    (1, 'sleep',    7.0,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 2 DAY,  NULL),
+    -- Exercise
+    (1, 'exercise', 5.2,  320,  'km',    35,    CURDATE() - INTERVAL 6 DAY,  'Morning jog'),
+    (1, 'exercise', 0,    250,  'session', 45,   CURDATE() - INTERVAL 4 DAY,  'Yoga session'),
+    (1, 'exercise', 3.0,  180,  'km',    25,    CURDATE() - INTERVAL 2 DAY,  'Evening walk'),
+    -- Water
+    (1, 'water',    2.2,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 6 DAY,  NULL),
+    (1, 'water',    1.8,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 5 DAY,  'Forgot to drink enough'),
+    (1, 'water',    2.5,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 4 DAY,  NULL),
+    (1, 'water',    2.0,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 3 DAY,  NULL),
+    (1, 'water',    2.3,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 2 DAY,  NULL),
+    -- Steps
+    (1, 'steps',    8500, NULL, 'steps', NULL,  CURDATE() - INTERVAL 6 DAY,  NULL),
+    (1, 'steps',    6200, NULL, 'steps', NULL,  CURDATE() - INTERVAL 5 DAY,  'Work from home day'),
+    (1, 'steps',    10300,NULL, 'steps', NULL,  CURDATE() - INTERVAL 4 DAY,  'Walked to lunch'),
+    (1, 'steps',    9100, NULL, 'steps', NULL,  CURDATE() - INTERVAL 3 DAY,  NULL),
+    (1, 'steps',    11200,NULL, 'steps', NULL,  CURDATE() - INTERVAL 2 DAY,  NULL),
+    -- Mood
+    (1, 'mood',     7,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 6 DAY,  'Feeling motivated'),
+    (1, 'mood',     5,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 5 DAY,  'Bit stressed at work'),
+    (1, 'mood',     8,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 4 DAY,  'Great after yoga'),
+    (1, 'mood',     4,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 3 DAY,  'Poor sleep affected mood'),
+    (1, 'mood',     7,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 2 DAY,  NULL);
+
 -- ──────────────────────────────────────────────────────────────
+-- Wellness Records — Bob (user_id = 2)
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO wellness_records (user_id, category, value, calories_burned, unit, duration_minutes, record_date, notes)
+VALUES
+    (2, 'sleep',    6.5,  NULL, 'hours',  NULL, CURDATE() - INTERVAL 5 DAY, NULL),
+    (2, 'sleep',    7.0,  NULL, 'hours',  NULL, CURDATE() - INTERVAL 3 DAY, NULL),
+    (2, 'exercise', 0,    450,  'session', 60,   CURDATE() - INTERVAL 5 DAY, 'Chest and triceps'),
+    (2, 'exercise', 0,    500,  'session', 75,   CURDATE() - INTERVAL 3 DAY, 'Back and biceps day'),
+    (2, 'exercise', 0,    420,  'session', 60,   CURDATE() - INTERVAL 1 DAY, 'Leg day'),
+    (2, 'water',    3.0,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 5 DAY, 'Post workout hydration'),
+    (2, 'water',    2.8,  NULL, 'liters', NULL,  CURDATE() - INTERVAL 3 DAY, NULL),
+    (2, 'steps',    7800, NULL, 'steps',  NULL,  CURDATE() - INTERVAL 5 DAY, NULL),
+    (2, 'steps',    5200, NULL, 'steps',  NULL,  CURDATE() - INTERVAL 3 DAY, 'Rest day'),
+    (2, 'mood',     8,    NULL, '1-10',   NULL,  CURDATE() - INTERVAL 5 DAY, 'Good workout'),
+    (2, 'mood',     7,    NULL, '1-10',   NULL,  CURDATE() - INTERVAL 3 DAY, NULL);
+
+-- ──────────────────────────────────────────────────────────────
+-- Wellness Records — Carol (user_id = 3)
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO wellness_records (user_id, category, value, calories_burned, unit, duration_minutes, record_date, notes)
+VALUES
+    (3, 'sleep',    5.0,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 6 DAY, 'Insomnia again'),
+    (3, 'sleep',    6.5,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 5 DAY, NULL),
+    (3, 'sleep',    5.5,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 4 DAY, 'Woke up early'),
+    (3, 'sleep',    7.5,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 3 DAY, 'Used sleep meditation'),
+    (3, 'sleep',    8.0,  NULL, 'hours', NULL,  CURDATE() - INTERVAL 2 DAY, 'Best sleep in weeks'),
+    (3, 'exercise', 0,    150,  'session', 30,  CURDATE() - INTERVAL 5 DAY, 'Gentle stretching'),
+    (3, 'exercise', 0,    200,  'session', 30,  CURDATE() - INTERVAL 2 DAY, 'Meditation + yoga'),
+    (3, 'water',    1.5,  NULL, 'liters', NULL, CURDATE() - INTERVAL 6 DAY, 'Forgot to drink'),
+    (3, 'water',    2.0,  NULL, 'liters', NULL, CURDATE() - INTERVAL 4 DAY, NULL),
+    (3, 'water',    2.2,  NULL, 'liters', NULL, CURDATE() - INTERVAL 2 DAY, NULL),
+    (3, 'steps',    4500, NULL, 'steps', NULL,  CURDATE() - INTERVAL 6 DAY, NULL),
+    (3, 'steps',    6800, NULL, 'steps', NULL,  CURDATE() - INTERVAL 4 DAY, NULL),
+    (3, 'steps',    7200, NULL, 'steps', NULL,  CURDATE() - INTERVAL 2 DAY, NULL),
+    (3, 'mood',     4,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 6 DAY, 'Tired and anxious'),
+    (3, 'mood',     5,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 4 DAY, 'Better after stretching'),
+    (3, 'mood',     7,    NULL, '1-10',  NULL,  CURDATE() - INTERVAL 2 DAY, 'Sleep improvement helping');
 
 -- ──────────────────────────────────────────────────────────────
 -- AI Recommendations (sample pre-seeded)
