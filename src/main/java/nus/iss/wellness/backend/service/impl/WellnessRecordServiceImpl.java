@@ -8,6 +8,8 @@ import nus.iss.wellness.backend.service.WellnessRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//Loh Si Hua - 27 Jun 2026
+
 @Service
 public class WellnessRecordServiceImpl implements WellnessRecordService {
 
@@ -28,4 +30,8 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
         return WellnessRecordResponse.from(wellnessRecordRepository.save(record));
     }
 }
-//
+
+//We defined the service interface with 5 operations 
+//(create (Si Hua), get all, get by category, get by id (Cecil), update (pang wee) , delete (Thiha)), 
+//then implemented them in the Impl class. The service layer sits 
+//between the controller and repository — it contains the business logic.
