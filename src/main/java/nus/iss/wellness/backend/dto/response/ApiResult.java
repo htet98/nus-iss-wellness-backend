@@ -27,7 +27,6 @@ public class ApiResult<T> {
     }
     public ApiResult() {
         super();
-        // TODO Auto-generated constructor stub
     }
     public ApiResult(boolean success, String message, T data) {
         super();
