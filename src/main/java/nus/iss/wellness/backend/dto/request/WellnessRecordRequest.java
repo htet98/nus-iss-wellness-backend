@@ -5,6 +5,7 @@ import nus.iss.wellness.backend.model.WellnessRecord;
 
 import java.time.LocalDate;
 
+//Loh Si Hua - 27 Jun 2026
 public class WellnessRecordRequest {
 
     @NotNull
@@ -49,3 +50,7 @@ public class WellnessRecordRequest {
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
 }
+
+// Request DTO defines what JSON the client sends in (userId, category, value, etc.). 
+// Response DTO defines what JSON gets returned. 
+// This keeps the API clean and separate from the internal database model.

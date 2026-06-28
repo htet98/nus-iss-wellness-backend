@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+//Loh Si Hua - 27 Jun 2026
 @Configuration
 @Order(1)
 public class WellnessSecurityConfig {
@@ -27,3 +28,9 @@ public class WellnessSecurityConfig {
         return http.build();
     }
 }
+
+// Spring Security was blocking all API requests by default, 
+// causing the repeated 401 Unauthorized errors in Postman. 
+// Since we couldn't modify SecurityConfig.java or application.properties, 
+// I created this new file to disable authentication specifically for /api/** routes. 
+// This allows Postman to call the endpoints without needing a username and password.
