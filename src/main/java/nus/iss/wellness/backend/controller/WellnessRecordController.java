@@ -21,5 +21,13 @@ public class WellnessRecordController {
         WellnessRecordResponse response = wellnessRecordService.createRecord(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("/{recordId}")
+    public WellnessRecordResponse updateRecord(
+            @PathVariable Long recordId,
+            @RequestBody WellnessRecordRequest request) {
+
+        return wellnessRecordService.updateRecord(recordId, request);
+    }
 }
 //
