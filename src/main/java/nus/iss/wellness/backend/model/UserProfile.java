@@ -3,7 +3,7 @@ package nus.iss.wellness.backend.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity
+//@Entity
 @Table(name = "user_profile")
 public class UserProfile {
 }
