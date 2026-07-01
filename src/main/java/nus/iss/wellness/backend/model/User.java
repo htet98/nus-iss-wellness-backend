@@ -35,8 +35,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserProfile profile;
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    private UserProfile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<WellnessRecord> wellnessRecords;
@@ -44,8 +44,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ChatSession> chatSessions;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<AiRecommendation> recommendations;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<AiRecommendation> recommendations;
 
     @PrePersist
     public void prePersist() {
@@ -61,10 +61,10 @@ public class User {
         this.passwordHash = passwordHash;
         this.email = email;
         this.createdAt = createdAt;
-        this.profile = profile;
+//        this.profile = profile;
         this.wellnessRecords = wellnessRecords;
         this.chatSessions = chatSessions;
-        this.recommendations = recommendations;
+//        this.recommendations = recommendations;
     }
 
     public User() {
@@ -79,10 +79,10 @@ public class User {
         this.passwordHash = passwordHash;
         this.email = email;
         this.createdAt = createdAt;
-        this.profile = profile;
+//        this.profile = profile;
         this.wellnessRecords = wellnessRecords;
         this.chatSessions = chatSessions;
-        this.recommendations = recommendations;
+//        this.recommendations = recommendations;
     }
 
     public Long getUserId() {
@@ -125,13 +125,13 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public UserProfile getProfile() {
-        return profile;
-    }
+//    public UserProfile getProfile() {
+//        return profile;
+//    }
 
-    public void setProfile(UserProfile profile) {
-        this.profile = profile;
-    }
+//    public void setProfile(UserProfile profile) {
+//        this.profile = profile;
+//    }
 
     public List<WellnessRecord> getWellnessRecords() {
         return wellnessRecords;
@@ -149,18 +149,21 @@ public class User {
         this.chatSessions = chatSessions;
     }
 
-    public List<AiRecommendation> getRecommendations() {
-        return recommendations;
-    }
+//    public List<AiRecommendation> getRecommendations() {
+//        return recommendations;
+//    }
 
-    public void setRecommendations(List<AiRecommendation> recommendations) {
-        this.recommendations = recommendations;
-    }
+//    public void setRecommendations(List<AiRecommendation> recommendations) {
+//        this.recommendations = recommendations;
+//    }
 
     @Override
     public String toString() {
+//        return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", email="
+//                + email + ", createdAt=" + createdAt + ", profile=" + profile + ", wellnessRecords=" + wellnessRecords
+//                + ", chatSessions=" + chatSessions + ", recommendations=" + recommendations + "]";
         return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", email="
-                + email + ", createdAt=" + createdAt + ", profile=" + profile + ", wellnessRecords=" + wellnessRecords
-                + ", chatSessions=" + chatSessions + ", recommendations=" + recommendations + "]";
+                + email + ", createdAt=" + createdAt + ", wellnessRecords=" + wellnessRecords
+                + ", chatSessions=" + chatSessions + "]";
     }
 }
