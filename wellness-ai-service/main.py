@@ -2,20 +2,20 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from services.rag_service import RAGService
+from services.agent_service import AgentService
 from routers import chat as chat_router
 #
 #   Author: Htet Nandar
 #
 
-rag: RAGService = RAGService()
+agent: AgentService = AgentService()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Starting up — loading vector store...")
-    rag.build_vector_store()
-    chat_router.rag_service = rag          # inject into router
-    print("Ready.")
+    agent.build_vector_store()
+    chat_router.agent_service = agent      # inject into router
+    print("Wellness agent ready.")
     yield
     print("Shutting down.")
 
