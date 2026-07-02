@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import nus.iss.wellness.backend.dto.response.DashboardResponse;
 import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.model.WellnessCategoryEnum;
+import nus.iss.wellness.backend.model.WellnessRecord;
 import nus.iss.wellness.backend.repository.UserRepository;
 import nus.iss.wellness.backend.repository.WellnessRecordRepository;
 import nus.iss.wellness.backend.service.DashboardService;
@@ -41,13 +42,13 @@ public class DashboardServiceImpl implements DashboardService {
 
         dto.setUsername(user.getUsername());
         
-        LocalDate searchDate = LocalDate.of(2026, 6, 22); // LocalDate.now()
+        LocalDate searchDate = LocalDate.of(2026, 6, 26); // LocalDate.now()
 
         // Query today's sleep
         wellnessRepository
         .findFirstByUserAndCategoryAndRecordDate(
                 user,
-                WellnessCategoryEnum.sleep,
+                WellnessRecord.Category.sleep,
                 searchDate)
         .ifPresent(record ->
                 dto.setSleepHours(record.getValue()));
@@ -56,7 +57,7 @@ public class DashboardServiceImpl implements DashboardService {
         wellnessRepository
         .findFirstByUserAndCategoryAndRecordDate(
                 user,
-                WellnessCategoryEnum.exercise,
+                WellnessRecord.Category.exercise,
                 searchDate)
         .ifPresent(record ->
                 dto.setExerciseMinutes(
@@ -66,7 +67,7 @@ public class DashboardServiceImpl implements DashboardService {
         wellnessRepository
         .findFirstByUserAndCategoryAndRecordDate(
                 user,
-                WellnessCategoryEnum.water,
+                WellnessRecord.Category.water,
                 searchDate)
         .ifPresent(record ->
                 dto.setWaterIntake(record.getValue()));
@@ -75,7 +76,7 @@ public class DashboardServiceImpl implements DashboardService {
         wellnessRepository
         .findFirstByUserAndCategoryAndRecordDate(
                 user,
-                WellnessCategoryEnum.steps,
+                WellnessRecord.Category.steps,
                 searchDate)
         .ifPresent(record ->
                 dto.setSteps(record.getValue()));
@@ -84,7 +85,7 @@ public class DashboardServiceImpl implements DashboardService {
         wellnessRepository
         .findFirstByUserAndCategoryAndRecordDate(
                 user,
-                WellnessCategoryEnum.mood,
+                WellnessRecord.Category.mood,
                 searchDate)
         .ifPresent(record ->
                 dto.setMood(record.getNotes()));
