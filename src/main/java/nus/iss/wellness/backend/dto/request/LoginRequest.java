@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 //author: Junior
 
 public class LoginRequest {
-
     @NotBlank(message = "Username is required")
     private String username;
 
@@ -25,17 +24,6 @@ public class LoginRequest {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LoginRequest() {
-        super();
-    }
-
-    public LoginRequest(@NotBlank(message = "Username is required") String username,
-                        @NotBlank(message = "Password is required") String password) {
-        super();
-        this.username = username;
         this.password = password;
     }
 }
