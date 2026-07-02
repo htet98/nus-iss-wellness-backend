@@ -15,7 +15,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
-@Entity
+//@Entity
 @Table(name = "user_profile")
 public class UserProfile {
 	@Id

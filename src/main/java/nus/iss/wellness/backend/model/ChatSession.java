@@ -1,83 +1,59 @@
 package nus.iss.wellness.backend.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-
+import java.util.ArrayList;
+import java.util.List;
+/**
+ *  Author: Htet Nandar
+ */
 @Entity
 @Table(name = "chat_sessions")
 public class ChatSession {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long sessionId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(length = 200)
     private String title;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public ChatSession() {
-    }
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
+    private List<ChatMessage> messages = new ArrayList<>();
 
     @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now();
-    }
+    protected void onCreate() { createdAt = LocalDateTime.now(); }
 
-    public Long getSessionId() {
-        return sessionId;
-    }
+    public ChatSession() {}
 
-    public void setSessionId(Long sessionId) {
-        this.sessionId = sessionId;
-    }
+    // ── Getters & Setters ──────────────────────────────────────────────────
 
-    public User getUser() {
-        return user;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public ChatSession(Long sessionId, User user, String title, LocalDateTime createdAt) {
-        super();
-        this.sessionId = sessionId;
-        this.user = user;
-        this.title = title;
-        this.createdAt = createdAt;
-    }
-
-    public ChatSession(User user, String title, LocalDateTime createdAt) {
-        super();
-        this.user = user;
-        this.title = title;
-        this.createdAt = createdAt;
-    }
+    public List<ChatMessage> getMessages() { return messages; }
+    public void setMessages(List<ChatMessage> messages) { this.messages = messages; }
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
-@Entity
+//@Entity
 @Table(name = "ai_recommendations")
 public class AiRecommendation {
 	@Id
