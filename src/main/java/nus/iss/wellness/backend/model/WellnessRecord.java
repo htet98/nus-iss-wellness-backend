@@ -50,6 +50,12 @@ public class WellnessRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    public User getUser() { return user; }
 
     public enum Category {
         sleep, exercise, mood, water, steps
