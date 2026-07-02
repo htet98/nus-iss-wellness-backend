@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+// Loh Si Hua - 27 Jun 2026
 @Entity
 @Table(name = "wellness_records")
 public class WellnessRecord {
@@ -49,6 +50,12 @@ public class WellnessRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    public User getUser() { return user; }
 
     public enum Category {
         sleep, exercise, mood, water, steps
@@ -84,3 +91,11 @@ public class WellnessRecord {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
+
+// I added the full JPA entity with all fields mapped to the 
+// wellness_records table in your database — id, 
+// userId, category (enum: sleep/exercise/mood/water/steps), 
+// value, caloriesBurned, unit, durationMinutes, 
+// recordDate, notes, and createdAt. 
+// Without this, Spring/Hibernate wouldn't know how to 
+// read/write wellness records to the database.
