@@ -2,19 +2,32 @@ package nus.iss.wellness.backend.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import nus.iss.wellness.backend.model.Role;
 
 //author: Junior
 
 public class RegisterRequest {
-
     @NotBlank(message = "Username is required")
     private String username;
 
+    @NotBlank(message = "Email is required")
     @Email(message = "Invalid email")
     private String email;
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    private Role role;
+
+    public RegisterRequest() {
+    }
+
+    public RegisterRequest(String username, String email, String password, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;
@@ -40,16 +53,11 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public RegisterRequest() {
-        super();
+    public Role getRole() {
+        return role;
     }
 
-    public RegisterRequest(@NotBlank(message = "Username is required") String username,
-                           @Email(message = "Invalid email") String email,
-                           @NotBlank(message = "Password is required") String password) {
-        super();
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
