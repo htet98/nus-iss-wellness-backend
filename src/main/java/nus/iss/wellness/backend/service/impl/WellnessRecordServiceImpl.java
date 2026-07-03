@@ -12,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 //Loh Si Hua - 27 Jun 2026
 
-//Loh Si Hua - 27 Jun 2026
 
 @Service
 public class WellnessRecordServiceImpl implements WellnessRecordService {

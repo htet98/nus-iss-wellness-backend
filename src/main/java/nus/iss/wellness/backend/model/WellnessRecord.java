@@ -47,7 +47,7 @@ public class WellnessRecord {
         this.createdAt = LocalDateTime.now();
     }
 
-   
+ 
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
@@ -64,6 +64,9 @@ public class WellnessRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+    
+
+    public User getUser() { return user; }
 
     public enum Category {
         sleep, exercise, mood, water, steps
