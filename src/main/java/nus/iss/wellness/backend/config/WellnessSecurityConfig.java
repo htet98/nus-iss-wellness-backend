@@ -9,8 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 //Loh Si Hua - 27 Jun 2026
-@Configuration
-@Order(1)
+// @Configuration — disabled: SecurityConfig now handles all auth with JWT filter
+// @Order(1)
 public class WellnessSecurityConfig {
 
     @Bean
