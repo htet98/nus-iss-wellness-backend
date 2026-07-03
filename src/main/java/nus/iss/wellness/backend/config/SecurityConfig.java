@@ -1,5 +1,7 @@
 package nus.iss.wellness.backend.config;
 
+import java.util.List;
+
 import nus.iss.wellness.backend.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,7 @@ import java.util.List;
 /**
  * Author: Htet Nandar
  */
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -36,6 +39,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
