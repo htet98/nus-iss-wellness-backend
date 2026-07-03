@@ -1,15 +1,14 @@
 package nus.iss.wellness.backend.model;
 
-
-import jakarta.persistence.*;
-import java.util.ArrayList;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,68 +25,40 @@ public class User {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-//    private UserProfile profile;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WellnessRecord> wellnessRecords;
+    private List<WellnessRecord> wellnessRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ChatSession> chatSessions;
+    private List<ChatSession> chatSessions = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<AiRecommendation> recommendations;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<AiRecommendation> recommendations = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
-    }
-
-    public User(Long userId, String username, String passwordHash, String email, LocalDateTime createdAt,
-                UserProfile profile, List<WellnessRecord> wellnessRecords, List<ChatSession> chatSessions,
-                List<AiRecommendation> recommendations) {
-        super();
-        this.userId = userId;
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.email = email;
-        this.createdAt = createdAt;
-//        this.profile = profile;
-        this.wellnessRecords = wellnessRecords;
-        this.chatSessions = chatSessions;
-//        this.recommendations = recommendations;
-    }
-
-    public User() {
-        super();
-    }
-
-    public User(String username, String passwordHash, String email, LocalDateTime createdAt, UserProfile profile,
-                List<WellnessRecord> wellnessRecords, List<ChatSession> chatSessions,
-                List<AiRecommendation> recommendations) {
-        super();
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.email = email;
-        this.createdAt = createdAt;
-//        this.profile = profile;
-        this.wellnessRecords = wellnessRecords;
-        this.chatSessions = chatSessions;
-//        this.recommendations = recommendations;
     }
 
     public Long getUserId() {
@@ -114,6 +85,14 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -130,13 +109,13 @@ public class User {
         this.createdAt = createdAt;
     }
 
-//    public UserProfile getProfile() {
-//        return profile;
-//    }
+    public UserProfile getProfile() {
+        return profile;
+    }
 
-//    public void setProfile(UserProfile profile) {
-//        this.profile = profile;
-//    }
+    public void setProfile(UserProfile profile) {
+        this.profile = profile;
+    }
 
     public List<WellnessRecord> getWellnessRecords() {
         return wellnessRecords;
@@ -154,13 +133,13 @@ public class User {
         this.chatSessions = chatSessions;
     }
 
-//    public List<AiRecommendation> getRecommendations() {
-//        return recommendations;
-//    }
+    public List<AiRecommendation> getRecommendations() {
+        return recommendations;
+    }
 
-//    public void setRecommendations(List<AiRecommendation> recommendations) {
-//        this.recommendations = recommendations;
-//    }
+    public void setRecommendations(List<AiRecommendation> recommendations) {
+        this.recommendations = recommendations;
+    }
 
     @Override
     public String toString() {

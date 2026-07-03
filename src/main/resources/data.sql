@@ -7,11 +7,11 @@
 -- ──────────────────────────────────────────────────────────────
 -- Users
 -- ──────────────────────────────────────────────────────────────
-INSERT IGNORE INTO users (user_id, username, password_hash, email, created_at)
+INSERT IGNORE INTO users (user_id, username, password_hash, role, email, created_at)
 VALUES
-    (1, 'alice',  'Password123!', 'alice@example.com',  NOW()),
-    (2, 'bob',    'Password123!', 'bob@example.com',    NOW()),
-    (3, 'carol',  'Password123!', 'carol@example.com',  NOW());
+    (1, 'alice',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'ADMIN', 'alice@example.com',  NOW()),
+    (2, 'bob',    '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'bob@example.com',    NOW()),
+    (3, 'carol',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'carol@example.com',  NOW());
 
 -- After hashing the passwords, the actual stored values will be:
 # (1, 'alice',  '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'alice@example.com',  NOW()),
@@ -24,9 +24,9 @@ VALUES
 -- ──────────────────────────────────────────────────────────────
 INSERT IGNORE INTO user_profile (user_id, first_name, last_name, gender, date_of_birth, address, height_cm, weight_kg, fitness_goal)
 VALUES
-    (1, 'Alice', 'Tan',    'Female', '1995-03-15', '10 Orchard Rd, Singapore', 163.0, 58.0,  'Lose 5kg and improve cardio endurance'),
-    (2, 'Bob',   'Lim',    'Male',   '1990-07-22', '25 Marina Bay, Singapore', 178.0, 82.0,  'Build muscle mass and increase strength'),
-    (3, 'Carol', 'Wong',   'Female', '1998-11-03', '5 Jurong East, Singapore', 158.0, 52.0,  'Improve sleep quality and reduce stress');
+    (1, 'Alice', 'Tan',    'FEMALE', '1995-03-15', '10 Orchard Rd, Singapore', 163.0, 58.0,  'LOSE_WEIGHT'),
+    (2, 'Bob',   'Lim',    'MALE',   '1990-07-22', '25 Marina Bay, Singapore', 178.0, 82.0,  'BUILD_MUSCLE'),
+    (3, 'Carol', 'Wong',   'FEMALE', '1998-11-03', '5 Jurong East, Singapore', 158.0, 52.0,  'IMPROVE_SLEEP');
 
 -- ──────────────────────────────────────────────────────────────
 -- Wellness Records — Alice (user_id = 1)

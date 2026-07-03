@@ -22,14 +22,15 @@ CREATE TABLE IF NOT EXISTS users
     user_id       BIGINT       NOT NULL AUTO_INCREMENT,
     username      VARCHAR(50)  NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    role			VARCHAR(5) NOT NULL,
     email         VARCHAR(100) NOT NULL,
     created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
     UNIQUE KEY uq_users_username (username),
     UNIQUE KEY uq_users_email (email)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS user_profile
@@ -49,11 +50,11 @@ CREATE TABLE IF NOT EXISTS user_profile
     PRIMARY KEY (id),
     UNIQUE KEY uq_user_profile_user_id (user_id),
     CONSTRAINT fk_user_profile_user
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
-            ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+                                                                 ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS wellness_records
@@ -72,11 +73,11 @@ CREATE TABLE IF NOT EXISTS wellness_records
     INDEX idx_wellness_user_date (user_id, record_date DESC),
     INDEX idx_wellness_category (user_id, category),
     CONSTRAINT fk_wellness_user
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
-            ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS ai_recommendations
@@ -90,11 +91,11 @@ CREATE TABLE IF NOT EXISTS ai_recommendations
     PRIMARY KEY (id),
     INDEX idx_ai_rec_user (user_id, generated_at DESC),
     CONSTRAINT fk_ai_rec_user
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
-            ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS chat_sessions
@@ -107,11 +108,11 @@ CREATE TABLE IF NOT EXISTS chat_sessions
     PRIMARY KEY (id),
     INDEX idx_chat_session_user (user_id, created_at DESC),
     CONSTRAINT fk_chat_session_user
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
-            ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS chat_messages
@@ -124,8 +125,8 @@ CREATE TABLE IF NOT EXISTS chat_messages
     PRIMARY KEY (id),
     INDEX idx_chat_msg_session (session_id, created_at ASC),
     CONSTRAINT fk_chat_msg_session
-        FOREIGN KEY (session_id) REFERENCES chat_sessions (id)
-            ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+    FOREIGN KEY (session_id) REFERENCES chat_sessions (id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
