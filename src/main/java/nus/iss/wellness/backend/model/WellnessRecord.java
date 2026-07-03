@@ -64,7 +64,6 @@ public class WellnessRecord {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-    
 
     public User getUser() { return user; }
 

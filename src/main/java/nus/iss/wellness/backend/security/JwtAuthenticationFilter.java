@@ -3,26 +3,40 @@ package nus.iss.wellness.backend.security;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nus.iss.wellness.backend.model.User;
+import nus.iss.wellness.backend.repository.UserRepository;
 import nus.iss.wellness.backend.service.JwtService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
+/**
+ * Validates the Bearer JWT on every request (except /api/auth/**).
+ * On success sets the user's Long userId as the Spring Security principal
+ * so controllers can read it via Authentication.getPrincipal().
+ *
+ * Author: Htet Nandar
+ */
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter{
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String AUTH_USERNAME = "authUsername";
-    public static final String AUTH_ROLE = "authRole";
+    /** Cookie name kept for AuthController logout endpoint compatibility. */
     public static final String AUTH_COOKIE_NAME = "authJwtToken";
 
-    private final nus.iss.wellness.backend.service.JwtService jwtService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository) {
         this.jwtService = jwtService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,78 +48,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
         String path = request.getRequestURI();
 
-        if (!isProtectedPath(path)) {
+        // Auth endpoints are public — skip token check
+        if (path.startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = resolveToken(request);
+        String authHeader = request.getHeader("Authorization");
 
-        if (token == null) {
-            handleUnauthorized(response);
+        // No token header — pass through; Spring Security will reject if endpoint requires auth
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        Claims claims;
+        String token = authHeader.substring(7);
+
         try {
-            claims = jwtService.authenticateToken(token);
+            Claims claims = jwtService.authenticateToken(token);
+            String username = claims.getSubject();
+            String role = claims.get("role", String.class);
+
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isEmpty()) {
+                sendUnauthorized(response, "User not found");
+                return;
+            }
+
+            Long userId = userOpt.get().getUserId();
+
+            // Set userId as principal in the security context
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userId,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                    );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
         } catch (Exception e) {
-            handleUnauthorized(response);
+            sendUnauthorized(response, "Invalid or expired token");
             return;
         }
-
-        String username = claims.getSubject();
-        String role = claims.get("role", String.class);
-
-        request.setAttribute(AUTH_USERNAME, username);
-        request.setAttribute(AUTH_ROLE, role);
 
         filterChain.doFilter(request, response);
     }
 
-    private boolean isProtectedPath(String path) {
-        return path.equals("/products") || path.equals("/api/products");
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String path = request.getRequestURI();
-
-        if (path.equals("/products")) {
-            return resolveTokenFromCookie(request);
-        }
-
-        if (path.equals("/api/products")) {
-            return resolveTokenFromAuthorizationHeader(request);
-        }
-
-        return null;
-    }
-
-    private String resolveTokenFromAuthorizationHeader(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-
-        return null;
-    }
-
-    private String resolveTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (AUTH_COOKIE_NAME.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
-    }
-
-    private void handleUnauthorized(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/login-failure");
+    private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"" + message + "\"}");
     }
 }

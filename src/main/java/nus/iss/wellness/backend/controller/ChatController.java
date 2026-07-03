@@ -8,12 +8,13 @@ import nus.iss.wellness.backend.dto.response.ChatSessionResponse;
 import nus.iss.wellness.backend.service.ChatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- *  Author: Htet Nandar
+ * Author: Htet Nandar
  */
 @RestController
 @RequestMapping("/api/chat")
@@ -29,37 +30,38 @@ public class ChatController {
 
     /**
      * POST /api/chat/sessions?title=My+Chat
-     * title is optional — defaults to "New Chat" if omitted.
+     * Requires: Authorization: Bearer <token>
      */
     @PostMapping("/sessions")
     public ResponseEntity<ChatSessionResponse> createSession(
-            @RequestHeader("X-User-Id") Long userId,
+            Authentication authentication,
             @RequestParam(required = false, defaultValue = "New Chat") String title) {
 
+        Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(chatService.createSession(userId, title));
     }
 
     /**
      * GET /api/chat/sessions
-     * Returns all sessions for the user, newest first.
+     * Returns all sessions for the authenticated user, newest first.
      */
     @GetMapping("/sessions")
-    public ResponseEntity<List<ChatSessionResponse>> getSessions(
-            @RequestHeader("X-User-Id") Long userId) {
+    public ResponseEntity<List<ChatSessionResponse>> getSessions(Authentication authentication) {
 
+        Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.ok(chatService.getSessions(userId));
     }
 
     /**
      * DELETE /api/chat/sessions/{sessionId}
-     * Deletes a session and all its messages (cascade).
      */
     @DeleteMapping("/sessions/{sessionId}")
     public ResponseEntity<Void> deleteSession(
-            @RequestHeader("X-User-Id") Long userId,
+            Authentication authentication,
             @PathVariable Long sessionId) {
 
+        Long userId = (Long) authentication.getPrincipal();
         chatService.deleteSession(userId, sessionId);
         return ResponseEntity.noContent().build();
     }
@@ -72,10 +74,11 @@ public class ChatController {
      */
     @PostMapping("/sessions/{sessionId}/messages")
     public ResponseEntity<ChatResponse> sendMessage(
-            @RequestHeader("X-User-Id") Long userId,
+            Authentication authentication,
             @PathVariable Long sessionId,
             @Valid @RequestBody ChatRequest request) {
 
+        Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.ok(chatService.sendMessage(userId, sessionId, request));
     }
 
@@ -85,9 +88,10 @@ public class ChatController {
      */
     @GetMapping("/sessions/{sessionId}/messages")
     public ResponseEntity<List<ChatMessageResponse>> getHistory(
-            @RequestHeader("X-User-Id") Long userId,
+            Authentication authentication,
             @PathVariable Long sessionId) {
 
+        Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.ok(chatService.getHistory(userId, sessionId));
     }
 }
