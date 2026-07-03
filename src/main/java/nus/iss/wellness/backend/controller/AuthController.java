@@ -1,46 +1,75 @@
 package nus.iss.wellness.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import nus.iss.wellness.backend.dto.request.LoginRequest;
+import nus.iss.wellness.backend.dto.request.RegisterRequest;
+import nus.iss.wellness.backend.dto.response.ApiResponse;
+import nus.iss.wellness.backend.dto.response.LoginResponse;
+import nus.iss.wellness.backend.security.JwtAuthenticationFilter;
+import nus.iss.wellness.backend.service.AuthService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import nus.iss.wellness.backend.dto.request.LoginRequest;
-import nus.iss.wellness.backend.dto.request.RegisterRequest;
-import nus.iss.wellness.backend.dto.response.ApiResponse;
-import nus.iss.wellness.backend.dto.response.LoginResponse;
-import nus.iss.wellness.backend.service.AuthService;
-
 //author: Junior
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    // ---------------- REGISTER ----------------
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> register(
-            @Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
+    }
 
-        ApiResponse response = authService.register(request);
+    // ---------------- LOGIN ----------------
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request) {
+
+        LoginResponse response = authService.login(request);
 
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request) {
+    // ---------------- LOGOUT ----------------
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
 
-        LoginResponse response = authService.login(request);
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                buildLogoutCookie().toString()
+        );
 
-        if (response == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok("Logged out");
+    }
 
-        return ResponseEntity.ok(response);
+    private ResponseCookie buildLoginCookie(String token) {
+        return ResponseCookie.from(JwtAuthenticationFilter.AUTH_COOKIE_NAME, token)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(30 * 60)
+                .sameSite("Strict")
+                .build();
+    }
+
+    private ResponseCookie buildLogoutCookie() {
+        return ResponseCookie.from(JwtAuthenticationFilter.AUTH_COOKIE_NAME, "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
     }
 }
