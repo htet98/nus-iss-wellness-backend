@@ -104,7 +104,7 @@ VALUES
 -- ──────────────────────────────────────────────────────────────
 -- AI Recommendations (sample pre-seeded)
 -- ──────────────────────────────────────────────────────────────
-INSERT IGNORE INTO ai_recommendations (user_id, title, content, status, generated_at)
+INSERT IGNORE INTO ai_recommendations (user_id, title, recommendation, status, generated_at)
 VALUES
     (1, 'Improve Your Sleep Consistency',
      'Your average sleep over the past week is 6.8 hours, which is slightly below the recommended 7-9 hours. On nights when you slept under 6 hours, your mood score dropped by an average of 2 points the next day. Try setting a consistent bedtime of 10:30 PM and avoiding screens 1 hour before bed to improve both duration and quality.',
