@@ -48,6 +48,10 @@ def build_or_load_collection() -> chromadb.Collection:
             ids.append(f"chunk_{doc_id}")
             doc_id += 1
 
+    if not documents:
+        print("  → No .txt files found in knowledge/ — vector store is empty (LLM will use general knowledge)")
+        return collection
+
     collection.add(documents=documents, ids=ids)
     print(f"  → {len(documents)} chunks added from {KNOWLEDGE_DIR}")
     return collection

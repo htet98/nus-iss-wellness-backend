@@ -1,7 +1,5 @@
 -- ============================================================
 -- Wellness App — Sample Seed Data
--- Passwords are BCrypt hashes of "Password123!"
--- Uses INSERT IGNORE to avoid errors on re-run.
 -- ============================================================
 
 -- ──────────────────────────────────────────────────────────────
@@ -12,12 +10,6 @@ VALUES
     (1, 'alice',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'ADMIN', 'alice@example.com',  NOW()),
     (2, 'bob',    '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'bob@example.com',    NOW()),
     (3, 'carol',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'carol@example.com',  NOW());
-
--- After hashing the passwords, the actual stored values will be:
-# (1, 'alice',  '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'alice@example.com',  NOW()),
-# (2, 'bob',    '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'bob@example.com',    NOW()),
-# (3, 'carol',  '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'carol@example.com',  NOW());
-
 
 -- ──────────────────────────────────────────────────────────────
 -- User Profiles
@@ -124,7 +116,6 @@ VALUES
 INSERT IGNORE INTO chat_sessions (id, user_id, title, is_active, created_at)
 VALUES
     (1, 1, 'How to improve my running pace?',   1, NOW() - INTERVAL 3 DAY),
-    (2, 1, 'Best foods for weight loss',         0, NOW() - INTERVAL 1 DAY),
     (3, 3, 'Tips for better sleep',              1, NOW() - INTERVAL 2 DAY);
 
 -- ──────────────────────────────────────────────────────────────
@@ -137,7 +128,7 @@ VALUES
                                                                                                                         NOW() - INTERVAL 3 DAY),
     (1, 'user',      'How often should I do interval training?',                                                        NOW() - INTERVAL 3 DAY),
     (1, 'assistant', 'For most runners, 1-2 interval sessions per week is optimal. More than that increases injury risk before your body adapts. Fill the remaining days with easy aerobic runs at a comfortable conversational pace, and take at least one full rest day. After 4-6 weeks of consistent interval work you should notice your pace improving.',
-                                                                                                                        NOW() - INTERVAL 3 DAY),
+                                                                                                                 NOW() - INTERVAL 3 DAY),
     (3, 'user',      'I have been struggling with sleep. Any tips?',                                                    NOW() - INTERVAL 2 DAY),
     (3, 'assistant', 'Looking at your data, your sleep has improved significantly from 5.0 to 8.0 hours over the past week — great progress! To maintain this, keep your bedtime and wake time consistent every day (even weekends). Continue the meditation you have been doing, keep your bedroom cool (15-18°C), and avoid caffeine after 2 PM. Your mood scores clearly rise when you sleep well, so this is your highest-impact habit to protect.',
                                                                                                                         NOW() - INTERVAL 2 DAY);
