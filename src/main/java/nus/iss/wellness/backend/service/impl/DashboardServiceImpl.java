@@ -6,29 +6,37 @@ import org.springframework.stereotype.Service;
 
 import nus.iss.wellness.backend.dto.response.DashboardResponse;
 import nus.iss.wellness.backend.model.User;
-import nus.iss.wellness.backend.model.WellnessCategoryEnum;
+import nus.iss.wellness.backend.model.UserProfile;
 import nus.iss.wellness.backend.model.WellnessRecord;
+import nus.iss.wellness.backend.repository.AiRecommendationRepository;
+import nus.iss.wellness.backend.repository.UserProfileRepository;
 import nus.iss.wellness.backend.repository.UserRepository;
 import nus.iss.wellness.backend.repository.WellnessRecordRepository;
 import nus.iss.wellness.backend.service.DashboardService;
+
+
+//Author: Cecil
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
 
     private final UserRepository userRepository;
     private final WellnessRecordRepository wellnessRepository;
-    //private final RecommendationRepository recommendationRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final AiRecommendationRepository recommendationRepository;
 
     public DashboardServiceImpl(
             UserRepository userRepository,
-            WellnessRecordRepository wellnessRepository
-            //RecommendationRepository recommendationRepository
+            WellnessRecordRepository wellnessRepository,
+            UserProfileRepository userProfileRepository,
+            AiRecommendationRepository recommendationRepository
             ) 
     {
 
         this.userRepository = userRepository;
         this.wellnessRepository = wellnessRepository;
-        //this.recommendationRepository = recommendationRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.recommendationRepository = recommendationRepository;
     }
 
     @Override
@@ -40,60 +48,114 @@ public class DashboardServiceImpl implements DashboardService {
 
         DashboardResponse dto = new DashboardResponse();
 
+        
         dto.setUsername(user.getUsername());
         
-        LocalDate searchDate = LocalDate.of(2026, 6, 26); // LocalDate.now()
+        
+        UserProfile profile = userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("User profile not found"));
 
-        // Query today's sleep
+        dto.setfullName(profile.getFirstName() + " " + profile.getLastName());
+        
+  
+        
+
+        // Query today's sleep  OrderByRecordDateDesc
         wellnessRepository
-        .findFirstByUserAndCategoryAndRecordDate(
+        .findTopByUserAndCategoryOrderByRecordDateDesc(
                 user,
-                WellnessRecord.Category.sleep,
-                searchDate)
+                WellnessRecord.Category.sleep
+                )
         .ifPresent(record ->
                 dto.setSleepHours(record.getValue()));
 
         // Query today's exercise
         wellnessRepository
-        .findFirstByUserAndCategoryAndRecordDate(
+        .findTopByUserAndCategoryOrderByRecordDateDesc(
                 user,
-                WellnessRecord.Category.exercise,
-                searchDate)
+                WellnessRecord.Category.exercise
+                )
         .ifPresent(record ->
                 dto.setExerciseMinutes(
                         record.getDurationMinutes()));
 
         // Query today's water
         wellnessRepository
-        .findFirstByUserAndCategoryAndRecordDate(
+        .findTopByUserAndCategoryOrderByRecordDateDesc(
                 user,
-                WellnessRecord.Category.water,
-                searchDate)
+                WellnessRecord.Category.water
+                )
         .ifPresent(record ->
                 dto.setWaterIntake(record.getValue()));
         
      // Query today's Steps
         wellnessRepository
-        .findFirstByUserAndCategoryAndRecordDate(
+        .findTopByUserAndCategoryOrderByRecordDateDesc(
                 user,
-                WellnessRecord.Category.steps,
-                searchDate)
+                WellnessRecord.Category.steps
+                )
         .ifPresent(record ->
                 dto.setSteps(record.getValue()));
 
-        // TODO:
+        // Query today's Mood
         wellnessRepository
-        .findFirstByUserAndCategoryAndRecordDate(
+        .findTopByUserAndCategoryOrderByRecordDateDesc(
                 user,
-                WellnessRecord.Category.mood,
-                searchDate)
-        .ifPresent(record ->
-                dto.setMood(record.getNotes()));
+                WellnessRecord.Category.mood
+                )
+        //.ifPresent(record ->
+        //        dto.setMood(record.getNotes()));
+        .ifPresent(record -> { dto.setMood(getMoodLevel(record.getValue())); });
 
-        // TODO:
         // Query latest recommendation
+        recommendationRepository
+        .findTopByUserOrderByGeneratedAtDesc(user)
+        .ifPresent(rec ->
+            dto.setLatestRecommendation(rec.getTitle()));
+        
+        
+        // Calculating Average Value
+        LocalDate startDate = LocalDate.now().minusDays(6);
+        
+        Double avgSleep = wellnessRepository.findAverageValue( user,
+                        									   WellnessRecord.Category.sleep,
+                        									   startDate);
 
+        dto.setAvgSleepHours(avgSleep);
+        
+
+        Double avgWater = wellnessRepository.findAverageValue( user,
+                        									   WellnessRecord.Category.water,
+                        									   startDate);
+
+        dto.setAvgWaterIntake(avgWater);
+        
+     
+        Double avgSteps = wellnessRepository.findAverageValue( user,
+                        									   WellnessRecord.Category.steps,
+                        									   startDate);
+
+        dto.setAvgSteps(avgSteps);
+        
+        
+        Double avgExercise = wellnessRepository.findAverageDuration( user,
+                        											 WellnessRecord.Category.exercise,
+                        											 startDate);
+
+        dto.setAvgExerciseMinutes(avgExercise == null ? null : avgExercise.intValue());
+         
+        
         return dto;
+    }
+    
+    private String getMoodLevel(Double moodValue) {
+
+        if (moodValue == null) { return "Unknown"; }
+        if (moodValue <= 2) { return "Low"; }
+        if (moodValue <= 5) { return "Content"; }
+        if (moodValue <= 8) { return "Good"; }
+
+        return "Excellent";
     }
 
 }

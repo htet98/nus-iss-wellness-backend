@@ -82,13 +82,13 @@ CREATE TABLE IF NOT EXISTS wellness_records
 -- ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS ai_recommendations
 (
-    id           BIGINT                                    NOT NULL AUTO_INCREMENT,
+    recommendation_id       BIGINT                         NOT NULL AUTO_INCREMENT,
     user_id      BIGINT                                    NOT NULL,
     title        VARCHAR(200)                              NOT NULL,
-    content      TEXT                                      NOT NULL,
+    recommendation      TEXT                               NOT NULL,
     status       ENUM ('pending','generated','dismissed')  NOT NULL DEFAULT 'pending',
     generated_at TIMESTAMP                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
+    PRIMARY KEY (recommendation_id),
     INDEX idx_ai_rec_user (user_id, generated_at DESC),
     CONSTRAINT fk_ai_rec_user
     FOREIGN KEY (user_id) REFERENCES users (user_id)

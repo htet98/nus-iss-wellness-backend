@@ -7,6 +7,8 @@ import nus.iss.wellness.backend.service.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Author: Cecil
+
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {

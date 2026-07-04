@@ -2,6 +2,8 @@ package nus.iss.wellness.backend.repository;
 
 import nus.iss.wellness.backend.model.WellnessRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -12,7 +14,8 @@ import java.util.Optional;
 import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.model.WellnessCategoryEnum;
 
-//Cecil - 2 Jul 2026
+// Author: Cecil
+
 @Repository
 public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, Long> {
 
@@ -34,35 +37,49 @@ public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, 
     /**
      * Get records within a date range.
      */
-    List<WellnessRecord> findByUserAndRecordDateBetween(
-            User user,
-            LocalDate startDate,
-            LocalDate endDate);
+    List<WellnessRecord> findByUserAndRecordDateBetween( User user, LocalDate startDate, LocalDate endDate);
 
     /**
      * Get records for one day.
      */
-    List<WellnessRecord> findByUserAndRecordDate(
-            User user,
-            LocalDate recordDate);
+    List<WellnessRecord> findByUserAndRecordDate( User user, LocalDate recordDate);
     
-    /*SELECT * FROM wellness_record 
-    WHERE user_id = :userId 
-      AND category = :category 
-      AND record_date = :recordDate 
-    LIMIT 1; */
     
     Optional<WellnessRecord> findFirstByUserAndCategoryAndRecordDate(
             User user, WellnessRecord.Category category, LocalDate recordDate);
     
-    /*SELECT * FROM wellness_record 
-    WHERE user_id = :userId AND category = :category 
-    ORDER BY record_date DESC 
-    LIMIT 1; */
 
     Optional<WellnessRecord> findTopByUserAndCategoryOrderByRecordDateDesc(
             User user,
             WellnessRecord.Category category);
+    
+    
+    @Query("""
+    		SELECT AVG(w.value)
+    		FROM WellnessRecord w
+    		WHERE w.user = :user
+    		AND w.category = :category
+    		AND w.recordDate >= :startDate
+    		""")
+    		Double findAverageValue(
+    		        @Param("user") User user,
+    		        @Param("category") WellnessRecord.Category category,
+    		        @Param("startDate") LocalDate startDate);
+    
+    
+    @Query("""
+    		SELECT AVG(w.durationMinutes)
+    		FROM WellnessRecord w
+    		WHERE w.user = :user
+    		AND w.category = :category
+    		AND w.recordDate >= :startDate
+    		""")
+    		Double findAverageDuration(
+    		        @Param("user") User user,
+    		        @Param("category") WellnessRecord.Category category,
+    		        @Param("startDate") LocalDate startDate);
+    
+    
 
   //Loh Si Hua - 27 Jun 2026
     List<WellnessRecord> findByUserIdOrderByRecordDateDesc(Long userId);
