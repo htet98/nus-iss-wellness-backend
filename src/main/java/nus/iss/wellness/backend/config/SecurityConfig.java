@@ -38,10 +38,11 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/wellness/**").permitAll()
-                .requestMatchers("/api/health/**").permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/health/**").permitAll()
+                    .requestMatchers("/api/wellness/**").authenticated()
+                    .requestMatchers("/api/chat/**").authenticated()
+                    .anyRequest().authenticated()
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session ->
