@@ -116,7 +116,6 @@ VALUES
 INSERT IGNORE INTO chat_sessions (id, user_id, title, is_active, created_at)
 VALUES
     (1, 1, 'How to improve my running pace?',   1, NOW() - INTERVAL 3 DAY),
-    (2, 1, 'Best foods for weight loss',         0, NOW() - INTERVAL 1 DAY),
     (3, 3, 'Tips for better sleep',              1, NOW() - INTERVAL 2 DAY);
 
 -- ──────────────────────────────────────────────────────────────
@@ -129,7 +128,7 @@ VALUES
                                                                                                                         NOW() - INTERVAL 3 DAY),
     (1, 'user',      'How often should I do interval training?',                                                        NOW() - INTERVAL 3 DAY),
     (1, 'assistant', 'For most runners, 1-2 interval sessions per week is optimal. More than that increases injury risk before your body adapts. Fill the remaining days with easy aerobic runs at a comfortable conversational pace, and take at least one full rest day. After 4-6 weeks of consistent interval work you should notice your pace improving.',
-                                                                                                                        NOW() - INTERVAL 3 DAY),
+                                                                                                                 NOW() - INTERVAL 3 DAY),
     (3, 'user',      'I have been struggling with sleep. Any tips?',                                                    NOW() - INTERVAL 2 DAY),
     (3, 'assistant', 'Looking at your data, your sleep has improved significantly from 5.0 to 8.0 hours over the past week — great progress! To maintain this, keep your bedtime and wake time consistent every day (even weekends). Continue the meditation you have been doing, keep your bedroom cool (15-18°C), and avoid caffeine after 2 PM. Your mood scores clearly rise when you sleep well, so this is your highest-impact habit to protect.',
                                                                                                                         NOW() - INTERVAL 2 DAY);
