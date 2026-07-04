@@ -1,7 +1,5 @@
 -- ============================================================
 -- Wellness App — Sample Seed Data
--- Passwords are BCrypt hashes of "Password123!"
--- Uses INSERT IGNORE to avoid errors on re-run.
 -- ============================================================
 
 -- ──────────────────────────────────────────────────────────────
@@ -12,12 +10,6 @@ VALUES
     (1, 'alice',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'ADMIN', 'alice@example.com',  NOW()),
     (2, 'bob',    '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'bob@example.com',    NOW()),
     (3, 'carol',  '9cba73c31ac15d21512382ce6b21e83f8b9fddd31196ff4f54559a8e29add1e3bc4038c86c9bee7512d0d8ea72ec9480580dc677a9f172b46366ecb5198615cc', 'user', 'carol@example.com',  NOW());
-
--- After hashing the passwords, the actual stored values will be:
-# (1, 'alice',  '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'alice@example.com',  NOW()),
-# (2, 'bob',    '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'bob@example.com',    NOW()),
-# (3, 'carol',  '$2b$10$D0MgzqdC.e1NzJmwpg5lZOvepUL4fIUG1b1zVWo4eePQ8VBcsJT3G', 'carol@example.com',  NOW());
-
 
 -- ──────────────────────────────────────────────────────────────
 -- User Profiles
