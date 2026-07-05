@@ -1,12 +1,12 @@
-import os
+from pathlib import Path
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 #
 #   Author: Htet Nandar
 #
-BASE_DIR        = os.path.dirname(os.path.dirname(__file__))
-KNOWLEDGE_DIR   = os.path.join(BASE_DIR, "knowledge")
-CHROMA_DIR      = os.path.join(BASE_DIR, "chroma_db")
+BASE_DIR:      Path = Path(__file__).resolve().parent.parent
+KNOWLEDGE_DIR: Path = BASE_DIR / "knowledge"
+CHROMA_DIR:    Path = BASE_DIR / "chroma_db"
 COLLECTION_NAME = "wellness_knowledge"
 EMBED_MODEL     = "all-MiniLM-L6-v2"
 CHUNK_SIZE      = 800
@@ -38,11 +38,8 @@ def build_or_load_collection() -> chromadb.Collection:
     documents, ids = [], []
     doc_id = 0
 
-    for filename in sorted(os.listdir(KNOWLEDGE_DIR)):
-        if not filename.endswith(".txt"):
-            continue
-        with open(os.path.join(KNOWLEDGE_DIR, filename), encoding="utf-8") as f:
-            text = f.read()
+    for filepath in sorted(KNOWLEDGE_DIR.glob("*.txt")):
+        text = filepath.read_text(encoding="utf-8")
         for chunk in _chunk_text(text):
             documents.append(chunk)
             ids.append(f"chunk_{doc_id}")
