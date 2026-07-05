@@ -80,6 +80,11 @@ public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, 
     		        @Param("startDate") LocalDate startDate);
     
     
+    @Query("SELECT w FROM WellnessRecord w WHERE w.user.id = :userId AND w.recordDate >= :startDate")
+    List<WellnessRecord> findRecordsByTimeframe(@Param("userId") Long userId, @Param("startDate") LocalDate startDate);
+
+    
+    
 
   //Loh Si Hua - 27 Jun 2026
     List<WellnessRecord> findByUserIdOrderByRecordDateDesc(Long userId);
