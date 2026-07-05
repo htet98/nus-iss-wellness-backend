@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //author: Junior
 
@@ -45,14 +49,28 @@ public class AuthController {
 
     // ---------------- LOGOUT ----------------
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
+    public ResponseEntity<Map<String, String>> logout(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+
+            String token = authHeader.substring(7);
+
+            authService.logout(token);
+        }
 
         response.addHeader(
                 HttpHeaders.SET_COOKIE,
                 buildLogoutCookie().toString()
         );
 
-        return ResponseEntity.ok("Logged out");
+        Map<String, String> result = new HashMap<>();
+        result.put("message", "Logged out");
+
+        return ResponseEntity.ok(result);
     }
 
     private ResponseCookie buildLoginCookie(String token) {
