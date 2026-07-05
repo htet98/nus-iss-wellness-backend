@@ -48,8 +48,8 @@ public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, 
     Optional<WellnessRecord> findFirstByUserAndCategoryAndRecordDate(
             User user, WellnessRecord.Category category, LocalDate recordDate);
     
-
-    Optional<WellnessRecord> findTopByUserAndCategoryOrderByRecordDateDesc(
+    
+    Optional<WellnessRecord> findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
             User user,
             WellnessRecord.Category category);
     
@@ -85,6 +85,9 @@ public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, 
     List<WellnessRecord> findByUserIdOrderByRecordDateDesc(Long userId);
 
     List<WellnessRecord> findByUserIdAndCategoryOrderByRecordDateDesc(Long userId, WellnessRecord.Category category);
+
+    Optional<WellnessRecord> findFirstByUserIdAndCategoryAndRecordDateOrderByCreatedAtDesc(
+            Long userId, WellnessRecord.Category category, LocalDate recordDate);
 }
 
 // I made it extend JpaRepository so Spring Data JPA 
