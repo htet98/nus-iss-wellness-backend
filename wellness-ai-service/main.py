@@ -11,7 +11,7 @@ from routers import chat as chat_router
 agent: AgentService = AgentService()
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     print("Starting up — loading vector store...")
     agent.build_vector_store()
     chat_router.agent_service = agent      # inject into router
