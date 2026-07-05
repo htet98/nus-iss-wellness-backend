@@ -89,6 +89,11 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getUsername(), user.getRole().name());
 
+        // Save the latest JWT in the database
+        user.setJwtToken(token);
+        userRepo.save(user);
+
+        // (Optional) Keep writing to the local file
         saveTokenToLocalFile(user.getUsername(), token);
 
         LoginResponse response = new LoginResponse();
@@ -102,6 +107,24 @@ public class AuthService {
         response.setToken(token);
 
         return response;
+    }
+
+    // ==========================================================
+    // LOGOUT
+    // ==========================================================
+    public void logout(String token) {
+
+        String username = jwtService
+                .authenticateToken(token)
+                .getSubject();
+
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Remove JWT from database
+        user.setJwtToken(null);
+
+        userRepo.save(user);
     }
 
     // ==========================================================
