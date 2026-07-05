@@ -62,7 +62,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Query today's sleep  OrderByRecordDateDesc
         wellnessRepository
-        .findTopByUserAndCategoryOrderByRecordDateDesc(
+        .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.sleep
                 )
@@ -71,7 +71,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Query today's exercise
         wellnessRepository
-        .findTopByUserAndCategoryOrderByRecordDateDesc(
+        .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.exercise
                 )
@@ -81,7 +81,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Query today's water
         wellnessRepository
-        .findTopByUserAndCategoryOrderByRecordDateDesc(
+        .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.water
                 )
@@ -90,7 +90,7 @@ public class DashboardServiceImpl implements DashboardService {
         
      // Query today's Steps
         wellnessRepository
-        .findTopByUserAndCategoryOrderByRecordDateDesc(
+        .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.steps
                 )
@@ -99,7 +99,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Query today's Mood
         wellnessRepository
-        .findTopByUserAndCategoryOrderByRecordDateDesc(
+        .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.mood
                 )

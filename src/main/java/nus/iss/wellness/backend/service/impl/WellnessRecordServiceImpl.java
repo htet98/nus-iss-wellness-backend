@@ -21,7 +21,10 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
 
     @Override
     public WellnessRecordResponse createRecord(WellnessRecordRequest request) {
-        WellnessRecord record = new WellnessRecord();
+    	WellnessRecord record = wellnessRecordRepository
+    	        .findFirstByUserIdAndCategoryAndRecordDateOrderByCreatedAtDesc(
+    	                request.getUserId(), request.getCategory(), request.getRecordDate())
+    	        .orElseGet(WellnessRecord::new);
         record.setUserId(request.getUserId());
         record.setCategory(request.getCategory());
         record.setValue(request.getValue());

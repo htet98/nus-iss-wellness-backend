@@ -1,13 +1,6 @@
 """
 Wellness agent tools.
 
-Each tool has:
-  - A Python function that executes the action
-  - An OpenAI-format schema (used in the tool-calling API)
-
-The LLM decides which tool(s) to call based on the user's message.
-Tools follow the @tool pattern from the NUS ISS Single Agent Deep Dive course.
-
 Author: Htet Nandar
 """
 import json
@@ -17,7 +10,6 @@ _collection = None
 
 
 def set_collection(collection) -> None:
-    """Inject the ChromaDB collection after the vector store is built."""
     global _collection
     _collection = collection
 
@@ -25,11 +17,6 @@ def set_collection(collection) -> None:
 # ── Tool functions ─────────────────────────────────────────────────────────
 
 def search_wellness_knowledge(query: str, k: int = 5) -> str:
-    """
-    Search the wellness knowledge base (ChromaDB) for evidence-based
-    information on nutrition, exercise, sleep, mental health, and wellness.
-    Returns relevant text chunks joined as a single string.
-    """
     if _collection is None:
         return "Knowledge base is not available right now."
     results = _collection.query(query_texts=[query], n_results=k)
@@ -42,8 +29,6 @@ def search_wellness_knowledge(query: str, k: int = 5) -> str:
 def calculate_bmi(weight_kg: float, height_m: float) -> str:
     """
     Calculate Body Mass Index (BMI) and return the WHO weight category.
-    weight_kg: weight in kilograms
-    height_m:  height in metres (e.g. 1.75)
     """
     if height_m <= 0 or weight_kg <= 0:
         return json.dumps({"error": "Weight and height must be positive numbers."})
@@ -75,8 +60,7 @@ def calculate_daily_calories(
     height_cm: float,
     age: int,
     gender: str,
-    activity_level: str,
-) -> str:
+    activity_level: str ) -> str:
     """
     Estimate Total Daily Energy Expenditure (TDEE) using Mifflin-St Jeor equation.
 
