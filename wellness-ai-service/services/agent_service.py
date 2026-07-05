@@ -45,7 +45,7 @@ class AgentService:
         self,
         message: str,
         history: list,
-        user_context: dict = None,
+        user_context: dict,
     ) -> tuple[str, str | None]:
 
         # ── 1. Input guardrails ────────────────────────────────────────

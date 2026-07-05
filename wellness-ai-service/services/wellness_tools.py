@@ -4,12 +4,14 @@ Wellness agent tools.
 Author: Htet Nandar
 """
 import json
+from typing import Optional
+import chromadb
 
 # Shared ChromaDB collection reference — set by AgentService after startup
-_collection = None
+_collection: Optional[chromadb.Collection] = None
 
 
-def set_collection(collection) -> None:
+def set_collection(collection: chromadb.Collection) -> None:
     global _collection
     _collection = collection
 
