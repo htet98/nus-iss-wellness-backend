@@ -69,13 +69,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             String role = claims.get("role", String.class);
 
+            //fixed logic flow
             Optional<User> userOpt = userRepository.findByUsername(username);
+
             if (userOpt.isEmpty()) {
                 sendUnauthorized(response, "User not found");
                 return;
             }
 
-            Long userId = userOpt.get().getUserId();
+            User user = userOpt.get();
+
+            // Check whether the JWT matches the one stored in the database
+            if (user.getJwtToken() == null || !token.equals(user.getJwtToken())) {
+                sendUnauthorized(response, "Token has been invalidated");
+                return;
+            }
+
+            Long userId = user.getUserId();
 
             // Set userId as principal in the security context
             UsernamePasswordAuthenticationToken authentication =
