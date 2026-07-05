@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/wellness")
 public class WellnessRecordController {
@@ -22,13 +24,21 @@ public class WellnessRecordController {
         WellnessRecordResponse response = wellnessRecordService.createRecord(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+    // For edit - Tan Pang Wee
     @PutMapping("/{recordId}")
     public WellnessRecordResponse updateRecord(
             @PathVariable Long recordId,
             @RequestBody WellnessRecordRequest request) {
 
         return wellnessRecordService.updateRecord(recordId, request);
+    }
+    @GetMapping("/{recordId}")
+    public WellnessRecordResponse getRecord(@PathVariable Long recordId) {
+        return wellnessRecordService.getRecord(recordId);
+    }
+    @GetMapping("/userid/{userId}")
+    public List<WellnessRecordResponse> getRecordsByUserId(@PathVariable Long userId) {
+        return wellnessRecordService.getRecordsByUserId(userId);
     }
 }
 

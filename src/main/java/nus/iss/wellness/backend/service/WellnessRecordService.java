@@ -2,10 +2,17 @@ package nus.iss.wellness.backend.service;
 
 import nus.iss.wellness.backend.dto.request.WellnessRecordRequest;
 import nus.iss.wellness.backend.dto.response.WellnessRecordResponse;
+
+import java.util.List;
+
 //Loh Si Hua - 27 Jun 2026
 public interface WellnessRecordService {
     WellnessRecordResponse createRecord(WellnessRecordRequest request);
+
+    // For Update : Tan pang wee
     WellnessRecordResponse updateRecord(Long recordId, WellnessRecordRequest request);
+    WellnessRecordResponse getRecord(Long recordId);
+    List<WellnessRecordResponse> getRecordsByUserId(Long userId);
 }
 
 // We defined the service interface with 5 operations 

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 //Loh Si Hua - 27 Jun 2026
 
 
@@ -35,7 +37,7 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
         record.setNotes(request.getNotes());
         return WellnessRecordResponse.from(wellnessRecordRepository.save(record));
     }
-
+    // For update : Tan Pang Wee
     @Override
     public WellnessRecordResponse updateRecord(Long recordId, WellnessRecordRequest request) {
 
@@ -55,6 +57,22 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
         WellnessRecord updatedRecord = wellnessRecordRepository.save(record);
 
         return WellnessRecordResponse.from(updatedRecord);
+    }
+    @Override
+    public WellnessRecordResponse getRecord(Long recordId) {
+
+        WellnessRecord record = wellnessRecordRepository.findById(recordId)
+                .orElseThrow(() -> new RuntimeException("Record not found"));
+
+        return WellnessRecordResponse.from(record);
+    }
+
+    @Override
+    public List<WellnessRecordResponse> getRecordsByUserId(Long userId) {
+        return wellnessRecordRepository.findByUserIdOrderByRecordDateDesc(userId)
+                .stream()
+                .map(WellnessRecordResponse::from)
+                .toList();
     }
 }
 
