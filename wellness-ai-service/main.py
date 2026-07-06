@@ -1,6 +1,9 @@
 import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from dotenv import load_dotenv
+
+load_dotenv()   # loads .env from the working directory before anything else
 
 from services.agent_service import AgentService
 from routers import chat as chat_router

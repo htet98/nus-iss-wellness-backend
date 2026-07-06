@@ -24,7 +24,6 @@ import json
 import os
 from typing import TypedDict, Optional, Literal
 
-from langchain_openai import ChatOpenAI
 from openai import OpenAI
 from langgraph.graph import StateGraph, START, END
 
@@ -32,9 +31,10 @@ from services.wellness_tools import TOOLS, TOOL_REGISTRY
 
 # ── LLM config ────────────────────────────────────────────────────────────────
 
-OPENROUTER_BASE = "https://openrouter.ai/api/v1"
-CHAT_MODEL      = "openai/gpt-4o-mini"
-MAX_ITERATIONS  = 5
+OPENROUTER_BASE        = "https://openrouter.ai/api/v1"
+CHAT_MODEL_OPENROUTER  = "openai/gpt-4o-mini"   # OpenRouter format
+CHAT_MODEL_OPENAI      = "gpt-4o-mini"           # Direct OpenAI format
+MAX_ITERATIONS         = 5
 
 
 # ── Shared workflow state ──────────────────────────────────────────────────────
@@ -147,7 +147,7 @@ SYSTEM_PROMPTS = {
 
 # ── Shared agent-loop helper (called by each handle_* function) ────────────────
 
-def _run_agent(route: str, state: WellnessState, client: OpenAI) -> dict:
+def _run_agent(route: str, state: WellnessState, client: OpenAI, model: str) -> dict:
     """Run the specialist agent loop with filtered tools for the given route."""
     allowed      = set(ROUTE_TOOLS[route])
     spec_tools   = [t for t in TOOLS if t["function"]["name"] in allowed]
@@ -168,7 +168,7 @@ def _run_agent(route: str, state: WellnessState, client: OpenAI) -> dict:
 
     for _ in range(MAX_ITERATIONS):
         response = client.chat.completions.create(
-            model=CHAT_MODEL,
+            model=model,
             messages=messages,
             tools=spec_tools if spec_tools else None,
             tool_choice="auto" if spec_tools else "none",
@@ -192,40 +192,43 @@ def _run_agent(route: str, state: WellnessState, client: OpenAI) -> dict:
 
     # Budget exhausted
     messages.append({"role": "user", "content": "Please give your final answer based on what you've found."})
-    fallback = client.chat.completions.create(model=CHAT_MODEL, messages=messages, temperature=0.7)
+    fallback = client.chat.completions.create(model=model, messages=messages, temperature=0.7)
     return {"reply": fallback.choices[0].message.content}
 
 
 # ── Workflow factory ───────────────────────────────────────────────────────────
 
-def build_wellness_workflow(api_key: str):
-    # Course-style LLM for classify_intent
-    llm = ChatOpenAI(
-        model=CHAT_MODEL,
+def build_wellness_workflow(api_key: str, base_url: str | None = None):
+    # Single raw OpenAI client for both classify_intent and specialist agent loops.
+    # Works with OpenRouter (base_url=OPENROUTER_BASE) and direct OpenAI (base_url=None).
+    client = OpenAI(
         api_key=api_key,
-        base_url=OPENROUTER_BASE,
-        temperature=0,
+        base_url=base_url,   # None = use OpenAI default; set to OPENROUTER_BASE for OpenRouter
     )
-
-    # Raw OpenAI client for specialist agent loops (tool-calling)
-    client = OpenAI(base_url=OPENROUTER_BASE, api_key=api_key)
+    # OpenRouter requires "openai/gpt-4o-mini"; direct OpenAI requires "gpt-4o-mini"
+    model = CHAT_MODEL_OPENROUTER if base_url else CHAT_MODEL_OPENAI
 
     # ── Router node (matches course: classify_intent) ─────────────────────────
     def classify_intent(state: WellnessState) -> dict:
-        response = llm.invoke(
-                            f"""Classify this wellness message into exactly one category:
-                            
-                            nutrition : diet, food, calories, eating, meal planning, macros, weight loss through diet
-                            fitness   : exercise, workouts, steps, physical activity, training, gym, running
-                            mental    : sleep, stress, mood, anxiety, mindfulness, mental health, relaxation
-                            metrics   : BMI, body mass index, calorie calculation, TDEE, weight/height numbers
-                            general   : anything that does not clearly fit the categories above
-                            
-                            Message: {state["message"]}
-                            
-                            Return only one word.
-                            """)
-        raw = response.content.strip().lower()
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{
+                "role": "user",
+                "content": f"""Classify this wellness message into exactly one category:
+
+                nutrition : diet, food, calories, eating, meal planning, macros, weight loss through diet
+                fitness   : exercise, workouts, steps, physical activity, training, gym, running
+                mental    : sleep, stress, mood, anxiety, mindfulness, mental health, relaxation
+                metrics   : BMI, body mass index, calorie calculation, TDEE, weight/height numbers
+                general   : anything that does not clearly fit the categories above
+                
+                Message: {state["message"]}
+                
+                Return only one word."""
+                }],
+                temperature=0,
+            )
+        raw = response.choices[0].message.content.strip().lower()
         route = raw if raw in ROUTE_TOOLS else "general"
         return {"route": route}
 
@@ -235,19 +238,19 @@ def build_wellness_workflow(api_key: str):
 
     # ── Specialist handlers (matches course: handle_technical / handle_billing / handle_general) ──
     def handle_nutrition(state: WellnessState) -> dict:
-        return _run_agent("nutrition", state, client)
+        return _run_agent("nutrition", state, client, model)
 
     def handle_fitness(state: WellnessState) -> dict:
-        return _run_agent("fitness", state, client)
+        return _run_agent("fitness", state, client, model)
 
     def handle_mental(state: WellnessState) -> dict:
-        return _run_agent("mental", state, client)
+        return _run_agent("mental", state, client, model)
 
     def handle_metrics(state: WellnessState) -> dict:
-        return _run_agent("metrics", state, client)
+        return _run_agent("metrics", state, client, model)
 
     def handle_general(state: WellnessState) -> dict:
-        return _run_agent("general", state, client)
+        return _run_agent("general", state, client, model)
 
     # ── Graph assembly ───────────
     builder = StateGraph(WellnessState)
