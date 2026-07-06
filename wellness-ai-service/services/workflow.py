@@ -24,7 +24,6 @@ import json
 import os
 from typing import TypedDict, Optional, Literal
 
-from langchain_openai import ChatOpenAI
 from openai import OpenAI
 from langgraph.graph import StateGraph, START, END
 
@@ -198,34 +197,36 @@ def _run_agent(route: str, state: WellnessState, client: OpenAI) -> dict:
 
 # ── Workflow factory ───────────────────────────────────────────────────────────
 
-def build_wellness_workflow(api_key: str):
-    # Course-style LLM for classify_intent
-    llm = ChatOpenAI(
-        model=CHAT_MODEL,
+def build_wellness_workflow(api_key: str, base_url: str | None = None):
+    # Single raw OpenAI client for both classify_intent and specialist agent loops.
+    # Works with OpenRouter (base_url="https://openrouter.ai/api/v1") and
+    # direct OpenAI (base_url=None — uses default https://api.openai.com/v1).
+    client = OpenAI(
         api_key=api_key,
-        base_url=OPENROUTER_BASE,
-        temperature=0,
+        base_url=base_url or OPENROUTER_BASE,
     )
-
-    # Raw OpenAI client for specialist agent loops (tool-calling)
-    client = OpenAI(base_url=OPENROUTER_BASE, api_key=api_key)
 
     # ── Router node (matches course: classify_intent) ─────────────────────────
     def classify_intent(state: WellnessState) -> dict:
-        response = llm.invoke(
-                            f"""Classify this wellness message into exactly one category:
-                            
-                            nutrition : diet, food, calories, eating, meal planning, macros, weight loss through diet
-                            fitness   : exercise, workouts, steps, physical activity, training, gym, running
-                            mental    : sleep, stress, mood, anxiety, mindfulness, mental health, relaxation
-                            metrics   : BMI, body mass index, calorie calculation, TDEE, weight/height numbers
-                            general   : anything that does not clearly fit the categories above
-                            
-                            Message: {state["message"]}
-                            
-                            Return only one word.
-                            """)
-        raw = response.content.strip().lower()
+        response = client.chat.completions.create(
+            model=CHAT_MODEL,
+            messages=[{
+                "role": "user",
+                "content": f"""Classify this wellness message into exactly one category:
+
+                nutrition : diet, food, calories, eating, meal planning, macros, weight loss through diet
+                fitness   : exercise, workouts, steps, physical activity, training, gym, running
+                mental    : sleep, stress, mood, anxiety, mindfulness, mental health, relaxation
+                metrics   : BMI, body mass index, calorie calculation, TDEE, weight/height numbers
+                general   : anything that does not clearly fit the categories above
+                
+                Message: {state["message"]}
+                
+                Return only one word."""
+                }],
+                temperature=0,
+            )
+        raw = response.choices[0].message.content.strip().lower()
         route = raw if raw in ROUTE_TOOLS else "general"
         return {"route": route}
 
