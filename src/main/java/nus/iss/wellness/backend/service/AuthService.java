@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
 
-//Author: Junior
+//author: Junior
 
 @Service
 public class AuthService {

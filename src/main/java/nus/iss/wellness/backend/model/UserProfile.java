@@ -1,92 +1,61 @@
 package nus.iss.wellness.backend.model;
-
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "user_profile")
 public class UserProfile {
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    @Column(name="first_name")
     private String firstName;
 
+    @Column(name="last_name")
     private String lastName;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
 
+    @Column(name="date_of_birth")
     private LocalDate dateOfBirth;
 
+    @Column(name="address")
     private String address;
 
+    @Column(name="height_cm")
     private Double heightCm;
 
+    @Column(name="weight_kg")
     private Double weightKg;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FitnessGoal fitnessGoal;
 
+    @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @Column(name="updated_at")
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void createDate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void updateDate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public UserProfile() {
-        super();
-    }
-
-    public UserProfile(Long id, User user, String firstName, String lastName, Gender gender, LocalDate dateOfBirth,
-                       String address, Double heightCm, Double weightKg, FitnessGoal fitnessGoal, LocalDateTime createdAt,
-                       LocalDateTime updatedAt) {
-        super();
-        this.id = id;
-        this.user = user;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.heightCm = heightCm;
-        this.weightKg = weightKg;
-        this.fitnessGoal = fitnessGoal;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public UserProfile(User user, String firstName, String lastName, Gender gender, LocalDate dateOfBirth,
-                       String address, Double heightCm, Double weightKg, FitnessGoal fitnessGoal, LocalDateTime createdAt,
-                       LocalDateTime updatedAt) {
-        super();
-        this.user = user;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.heightCm = heightCm;
-        this.weightKg = weightKg;
-        this.fitnessGoal = fitnessGoal;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     public Long getId() {
         return id;
@@ -182,6 +151,10 @@ public class UserProfile {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public UserProfile() {
+        super();
     }
 
     @Override
