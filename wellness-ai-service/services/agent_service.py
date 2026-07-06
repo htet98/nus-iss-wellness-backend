@@ -33,7 +33,7 @@ class AgentService:
         self.collection = build_or_load_collection()
         wellness_tools.set_collection(self.collection)
 
-        # Build the conditional-routing workflow (Day 3 pattern).
+        # Build the conditional-routing workflow.
         # Supports OpenRouter (OPENROUTER_API_KEY) and direct OpenAI (OPENAI_API_KEY).
         from services.workflow import build_wellness_workflow, OPENROUTER_BASE
         openrouter_key = os.getenv("OPENROUTER_API_KEY")
@@ -41,9 +41,15 @@ class AgentService:
         if openrouter_key:
             api_key  = openrouter_key
             base_url = OPENROUTER_BASE
+            print(f"[AI] Using OpenRouter  key: {openrouter_key[:8]}...{openrouter_key[-4:]}")
+        elif openai_key:
+            api_key  = openai_key
+            base_url = None
+            print(f"[AI] Using OpenAI      key: {openai_key[:8]}...{openai_key[-4:]}")
         else:
-            api_key  = openai_key   # may still be None if neither is set
-            base_url = None         # use OpenAI default endpoint
+            api_key  = None
+            base_url = None
+            print("[AI] WARNING: No API key found — set OPENROUTER_API_KEY or OPENAI_API_KEY in .env")
         self._workflow = build_wellness_workflow(api_key=api_key, base_url=base_url)
 
     # ── Public entry point ─────────────────────────────────────────────────────
