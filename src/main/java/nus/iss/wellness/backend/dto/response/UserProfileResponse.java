@@ -2,6 +2,7 @@ package nus.iss.wellness.backend.dto.response;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import nus.iss.wellness.backend.model.FitnessGoal;
 import nus.iss.wellness.backend.model.Gender;
 
@@ -14,7 +15,10 @@ public class UserProfileResponse {
     private String firstName;
     private String lastName;
     private Gender gender;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
     private String address;
     private Double heightCm;
     private Double weightKg;

@@ -2,16 +2,7 @@ package nus.iss.wellness.backend.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_profile")
@@ -51,11 +42,27 @@ public class UserProfile {
     @Column(nullable = false)
     private FitnessGoal fitnessGoal;
 
-    @Column(name="created_at")
+    @Column(name="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        createdAt = now;
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+
+        updatedAt = LocalDateTime.now();
+
+    }
 
     public Long getId() {
         return id;
