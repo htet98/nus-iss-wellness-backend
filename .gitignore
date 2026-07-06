@@ -43,7 +43,7 @@ out/
 # ============================================================
 # Environment / Secrets
 # ============================================================
-.env
+wellness-ai-service/.env
 *.env
 application-local.properties
 application-local.yml
