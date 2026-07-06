@@ -3,7 +3,82 @@ package nus.iss.wellness.backend.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import nus.iss.wellness.backend.dto.request.UserProfileRequest;
+import nus.iss.wellness.backend.dto.response.UserProfileResponse;
+import nus.iss.wellness.backend.service.UserProfileService;
+
+//author: Junior
+
 @RestController
 @RequestMapping("/api/profile")
 public class UserProfileController {
+
+    private final UserProfileService userProfileService;
+
+    public UserProfileController(
+            UserProfileService userProfileService) {
+
+        this.userProfileService = userProfileService;
+
+    }
+
+    // =====================================================
+    // Get Profile
+    // =====================================================
+
+    @GetMapping
+    public ResponseEntity<UserProfileResponse> getProfile(
+            Authentication authentication) {
+
+        UserProfileResponse response =
+                userProfileService.getProfile(
+                        authentication.getName());
+
+        return ResponseEntity.ok(response);
+
+    }
+
+    // =====================================================
+    // Update Profile
+    // =====================================================
+
+    @PutMapping
+    public ResponseEntity<UserProfileResponse> updateProfile(
+            Authentication authentication,
+            @Valid @RequestBody UserProfileRequest request) {
+
+        UserProfileResponse response =
+                userProfileService.updateProfile(
+                        authentication.getName(),
+                        request);
+
+        return ResponseEntity.ok(response);
+
+    }
+
+    // =====================================================
+    // Delete Profile
+    // =====================================================
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteProfile(
+            Authentication authentication) {
+
+        userProfileService.deleteProfile(
+                authentication.getName());
+
+        return ResponseEntity.ok(
+                "Profile deleted successfully.");
+
+    }
 }
