@@ -1,5 +1,7 @@
 package nus.iss.wellness.backend.service;
 
+import jakarta.validation.constraints.NotBlank;
+import nus.iss.wellness.backend.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -10,6 +12,8 @@ import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.model.UserProfile;
 import nus.iss.wellness.backend.repository.UserProfileRepository;
 import nus.iss.wellness.backend.repository.UserRepository;
+
+import java.time.LocalDate;
 
 //author: Junior
 
@@ -33,6 +37,7 @@ public class UserProfileService {
     // =====================================================
 
     public UserProfileResponse getProfile(String username) {
+
 
         User user = getUser(username);
 
@@ -131,6 +136,27 @@ public class UserProfileService {
 
             throw new IllegalArgumentException(
                     "Last name is required.");
+        }
+
+        if (request.getDateOfBirth() == null ||
+                request.getDateOfBirth().isAfter(LocalDate.now())) {
+
+            throw new BadRequestException(
+                    "Date of birth is required and must not be in the future.");
+        }
+
+        if (request.getHeightCm() == null ||
+                request.getHeightCm() < 50 || request.getHeightCm() > 272) {
+
+            throw new BadRequestException(
+                    "Height is not valid.");
+        }
+
+        if (request.getWeightKg() == null ||
+                request.getWeightKg() < 20 || request.getWeightKg() > 650) {
+
+            throw new BadRequestException(
+                    "Weight is not valid.");
         }
     }
 
