@@ -53,7 +53,16 @@ public class UserProfileService {
 
         User user = getUser(username);
 
-        UserProfile profile = getProfileEntity(user);
+        // Create profile if it doesn't exist
+        UserProfile profile = profileRepository
+                .findByUser(user)
+                .orElseGet(() -> {
+
+                    UserProfile newProfile = new UserProfile();
+                    newProfile.setUser(user);
+
+                    return newProfile;
+                });
 
         profile.setFirstName(request.getFirstName());
         profile.setLastName(request.getLastName());
@@ -64,8 +73,7 @@ public class UserProfileService {
         profile.setWeightKg(request.getWeightKg());
         profile.setFitnessGoal(request.getFitnessGoal());
 
-        UserProfile updatedProfile =
-                profileRepository.save(profile);
+        UserProfile updatedProfile = profileRepository.save(profile);
 
         return convertToResponse(updatedProfile);
     }
@@ -129,8 +137,7 @@ public class UserProfileService {
     private UserProfileResponse convertToResponse(
             UserProfile profile) {
 
-        UserProfileResponse response =
-                new UserProfileResponse();
+        UserProfileResponse response = new UserProfileResponse();
 
         response.setId(profile.getId());
         response.setUsername(profile.getUser().getUsername());

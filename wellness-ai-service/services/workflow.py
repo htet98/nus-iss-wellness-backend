@@ -27,7 +27,18 @@ from typing import TypedDict, Optional, Literal
 from openai import OpenAI
 from langgraph.graph import StateGraph, START, END
 
-from services.wellness_tools import TOOLS, TOOL_REGISTRY
+from langchain_core.utils.function_calling import convert_to_openai_function
+
+# ── MCP tool helpers ──────────────────────────────────────────────────────────
+
+def _to_openai_tools(lc_tools: list) -> list:
+    """Convert a list of LangChain BaseTool objects to OpenAI function-calling schemas."""
+    result = []
+    for tool in lc_tools:
+        schema = convert_to_openai_function(tool)
+        result.append({"type": "function", "function": schema})
+    return result
+
 
 # ── LLM config ────────────────────────────────────────────────────────────────
 
@@ -147,10 +158,17 @@ SYSTEM_PROMPTS = {
 
 # ── Shared agent-loop helper (called by each handle_* function) ────────────────
 
-def _run_agent(route: str, state: WellnessState, client: OpenAI, model: str) -> dict:
-    """Run the specialist agent loop with filtered tools for the given route."""
-    allowed      = set(ROUTE_TOOLS[route])
-    spec_tools   = [t for t in TOOLS if t["function"]["name"] in allowed]
+def _run_agent(
+    route: str,
+    state: WellnessState,
+    client: OpenAI,
+    model: str,
+    openai_tools: list,
+    tool_registry: dict,
+) -> dict:
+    """Run the specialist agent loop with MCP tools filtered for the given route."""
+    allowed    = set(ROUTE_TOOLS[route])
+    spec_tools = [t for t in openai_tools if t["function"]["name"] in allowed]
     system_prompt = SYSTEM_PROMPTS[route]
 
     # Optionally inject user profile
@@ -184,8 +202,12 @@ def _run_agent(route: str, state: WellnessState, client: OpenAI, model: str) -> 
         for tc in assistant_msg.tool_calls:
             fn = tc.function.name
             try:
-                result = TOOL_REGISTRY[fn](**json.loads(tc.function.arguments)) if fn in allowed else f"Tool '{fn}' not available."
-                tool_result = result if isinstance(result, str) else json.dumps(result)
+                if fn in allowed and fn in tool_registry:
+                    # Call the LangChain MCP tool — .invoke() accepts a dict
+                    result = tool_registry[fn].invoke(json.loads(tc.function.arguments))
+                    tool_result = result if isinstance(result, str) else json.dumps(result)
+                else:
+                    tool_result = f"Tool '{fn}' not available."
             except Exception as e:
                 tool_result = json.dumps({"error": str(e)})
             messages.append({"role": "tool", "tool_call_id": tc.id, "content": tool_result})
@@ -198,7 +220,7 @@ def _run_agent(route: str, state: WellnessState, client: OpenAI, model: str) -> 
 
 # ── Workflow factory ───────────────────────────────────────────────────────────
 
-def build_wellness_workflow(api_key: str, base_url: str | None = None):
+def build_wellness_workflow(api_key: str, base_url: str | None = None, mcp_tools: list = None):
     # Single raw OpenAI client for both classify_intent and specialist agent loops.
     # Works with OpenRouter (base_url=OPENROUTER_BASE) and direct OpenAI (base_url=None).
     client = OpenAI(
@@ -207,6 +229,11 @@ def build_wellness_workflow(api_key: str, base_url: str | None = None):
     )
     # OpenRouter requires "openai/gpt-4o-mini"; direct OpenAI requires "gpt-4o-mini"
     model = CHAT_MODEL_OPENROUTER if base_url else CHAT_MODEL_OPENAI
+
+    # Convert MCP LangChain tools → OpenAI schemas + lookup dict
+    openai_tools  = _to_openai_tools(mcp_tools or [])
+    tool_registry = {t.name: t for t in (mcp_tools or [])}
+    print(f"[Workflow] MCP tools loaded: {list(tool_registry.keys())}")
 
     # ── Router node (matches course: classify_intent) ─────────────────────────
     def classify_intent(state: WellnessState) -> dict:
@@ -236,21 +263,21 @@ def build_wellness_workflow(api_key: str, base_url: str | None = None):
     def route_decision(state: WellnessState) -> Literal["nutrition", "fitness", "mental", "metrics", "general"]:
         return state["route"]
 
-    # ── Specialist handlers (matches course: handle_technical / handle_billing / handle_general) ──
+    # ── Specialist handlers ──────────────────────────────────────────────────
     def handle_nutrition(state: WellnessState) -> dict:
-        return _run_agent("nutrition", state, client, model)
+        return _run_agent("nutrition", state, client, model, openai_tools, tool_registry)
 
     def handle_fitness(state: WellnessState) -> dict:
-        return _run_agent("fitness", state, client, model)
+        return _run_agent("fitness", state, client, model, openai_tools, tool_registry)
 
     def handle_mental(state: WellnessState) -> dict:
-        return _run_agent("mental", state, client, model)
+        return _run_agent("mental", state, client, model, openai_tools, tool_registry)
 
     def handle_metrics(state: WellnessState) -> dict:
-        return _run_agent("metrics", state, client, model)
+        return _run_agent("metrics", state, client, model, openai_tools, tool_registry)
 
     def handle_general(state: WellnessState) -> dict:
-        return _run_agent("general", state, client, model)
+        return _run_agent("general", state, client, model, openai_tools, tool_registry)
 
     # ── Graph assembly ───────────
     builder = StateGraph(WellnessState)
