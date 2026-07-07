@@ -86,10 +86,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
 
-            // Set username as principal in the security context
+            // Set userId (Long) as principal so controllers can cast directly:
+            //   Long userId = (Long) authentication.getPrincipal();
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            username,
+                            user.getUserId(),
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_" + role))
                     );
