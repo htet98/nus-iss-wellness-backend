@@ -38,8 +38,8 @@ public class ChatController {
             Authentication authentication,
             @RequestParam(required = false, defaultValue = "New Chat") String title) {
 
-        User user = (User) authentication.getPrincipal();
-        Long userId = user.getUserId();
+//        User user = (User) authentication.getPrincipal();
+        Long userId = (Long) authentication.getPrincipal();
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(chatService.createSession(userId, title));
