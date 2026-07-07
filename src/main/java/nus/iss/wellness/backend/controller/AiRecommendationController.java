@@ -21,11 +21,17 @@ public class AiRecommendationController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<AiRecommendationResponse> getLatest(Authentication authentication) {
+    public ResponseEntity<?> getLatest(Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();
-        return recommendationService.getLatest(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return recommendationService.getLatest(userId)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(java.util.Map.of("error", e.getMessage() != null
+                            ? e.getMessage() : e.getClass().getSimpleName()));
+        }
     }
 
     /**
