@@ -41,6 +41,9 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/health/**").permitAll()
                     .requestMatchers("/api/profile/**").permitAll()
+                    .requestMatchers("/api/wellness/**").permitAll()
+                    .requestMatchers("/api/dashboard/**").permitAll()
+
                     .anyRequest().authenticated()
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
