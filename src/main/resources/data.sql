@@ -100,15 +100,15 @@ INSERT IGNORE INTO ai_recommendations (user_id, title, recommendation, status, g
 VALUES
     (1, 'Improve Your Sleep Consistency',
      'Your average sleep over the past week is 6.8 hours, which is slightly below the recommended 7-9 hours. On nights when you slept under 6 hours, your mood score dropped by an average of 2 points the next day. Try setting a consistent bedtime of 10:30 PM and avoiding screens 1 hour before bed to improve both duration and quality.',
-     'generated', NOW() - INTERVAL 2 DAY),
+     'generated', NOW() - INTERVAL 5 DAY),
 
     (2, 'Optimize Recovery Between Strength Sessions',
      'You are training 3 days consecutively without adequate rest. For muscle hypertrophy, allow 48 hours between sessions targeting the same muscle group. Consider incorporating a rest day between your chest/triceps and back/biceps sessions, and prioritize 7-8 hours of sleep for optimal muscle repair.',
-     'generated', NOW() - INTERVAL 1 DAY),
+     'generated', NOW() - INTERVAL 4 DAY),
 
     (3, 'Sleep Hygiene Plan for Stress Reduction',
      'Your sleep data shows a positive trend — you improved from 5.0 to 8.0 hours over the past week using meditation techniques. Keep building on this by maintaining a consistent wake time even on weekends. Your mood scores correlate strongly with sleep quality (r=0.85), so protecting your sleep will be the highest-impact intervention for stress reduction.',
-     'generated', NOW());
+     'generated', NOW() - INTERVAL 3 DAY);
 
 -- ──────────────────────────────────────────────────────────────
 -- Chat Sessions
