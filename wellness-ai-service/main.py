@@ -16,7 +16,7 @@ agent: AgentService = AgentService()
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     print("Starting up — loading vector store...")
-    agent.build_vector_store()
+    await agent.build_vector_store()
     chat_router.agent_service = agent      # inject into router
     print("Wellness agent ready.")
     yield

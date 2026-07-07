@@ -28,6 +28,8 @@ public class AiRecommendation {
     @Column(columnDefinition = "TEXT")
     private String recommendation;
 
+    private String status;
+
     private LocalDateTime generatedAt;
 
     public AiRecommendation() {
@@ -69,6 +71,9 @@ public class AiRecommendation {
     public void setRecommendation(String recommendation) {
         this.recommendation = recommendation;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public LocalDateTime getGeneratedAt() {
         return generatedAt;
