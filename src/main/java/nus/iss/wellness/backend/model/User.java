@@ -154,12 +154,12 @@ public class User {
 
     @Override
     public String toString() {
-//        return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", email="
-//                + email + ", createdAt=" + createdAt + ", profile=" + profile + ", wellnessRecords=" + wellnessRecords
-//                + ", chatSessions=" + chatSessions + ", recommendations=" + recommendations + "]";
-        return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", email="
-                + email + ", createdAt=" + createdAt + ", wellnessRecords=" + wellnessRecords
-                + ", chatSessions=" + chatSessions + "]";
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
 

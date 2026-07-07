@@ -5,6 +5,7 @@ import nus.iss.wellness.backend.dto.request.ChatRequest;
 import nus.iss.wellness.backend.dto.response.ChatMessageResponse;
 import nus.iss.wellness.backend.dto.response.ChatResponse;
 import nus.iss.wellness.backend.dto.response.ChatSessionResponse;
+import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.service.ChatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,9 @@ public class ChatController {
             Authentication authentication,
             @RequestParam(required = false, defaultValue = "New Chat") String title) {
 
+//        User user = (User) authentication.getPrincipal();
         Long userId = (Long) authentication.getPrincipal();
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(chatService.createSession(userId, title));
     }
