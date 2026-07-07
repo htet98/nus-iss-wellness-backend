@@ -29,12 +29,11 @@ class AgentService:
         self.collection = None
         self._workflow  = None   # built after vector store is ready
 
-    def build_vector_store(self):
+    async def build_vector_store(self):
         self.collection = build_or_load_collection()
         wellness_tools.set_collection(self.collection)
 
-        # Build the conditional-routing workflow.
-        # Supports OpenRouter (OPENROUTER_API_KEY) and direct OpenAI (OPENAI_API_KEY).
+        # ── Resolve API key / base URL ─────────────────────────────────────
         from services.workflow import build_wellness_workflow, OPENROUTER_BASE
         openrouter_key = os.getenv("OPENROUTER_API_KEY")
         openai_key     = os.getenv("OPENAI_API_KEY")
@@ -50,7 +49,25 @@ class AgentService:
             api_key  = None
             base_url = None
             print("[AI] WARNING: No API key found — set OPENROUTER_API_KEY or OPENAI_API_KEY in .env")
-        self._workflow = build_wellness_workflow(api_key=api_key, base_url=base_url)
+
+        # ── Load tools from MCP server (same pattern as course MCP_agent.py) ──
+        from langchain_mcp_adapters.client import MultiServerMCPClient
+        server_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "wellness_mcp_server.py")
+        )
+        mcp_client = MultiServerMCPClient({
+            "wellness": {
+                "command": "python",
+                "args": [server_path],
+                "transport": "stdio",
+            }
+        })
+        mcp_tools = await mcp_client.get_tools()
+        print(f"[AI] MCP tools available: {[t.name for t in mcp_tools]}")
+
+        self._workflow = build_wellness_workflow(
+            api_key=api_key, base_url=base_url, mcp_tools=mcp_tools
+        )
 
     # ── Public entry point ─────────────────────────────────────────────────────
 
