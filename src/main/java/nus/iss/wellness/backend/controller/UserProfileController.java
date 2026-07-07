@@ -1,5 +1,6 @@
 package nus.iss.wellness.backend.controller;
 
+import nus.iss.wellness.backend.model.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,15 +38,14 @@ public class UserProfileController {
     // =====================================================
 
     @GetMapping
-    public ResponseEntity<UserProfileResponse> getProfile(
-            Authentication authentication) {
+    public ResponseEntity<UserProfileResponse> getProfile(Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
 
         UserProfileResponse response =
-                userProfileService.getProfile(
-                        authentication.getName());
+                userProfileService.getProfile(user.getUsername());
 
         return ResponseEntity.ok(response);
-
     }
 
     // =====================================================
@@ -57,13 +57,14 @@ public class UserProfileController {
             Authentication authentication,
             @Valid @RequestBody UserProfileRequest request) {
 
+        User user = (User) authentication.getPrincipal();
+
         UserProfileResponse response =
                 userProfileService.updateProfile(
-                        authentication.getName(),
+                        user.getUsername(),
                         request);
 
         return ResponseEntity.ok(response);
-
     }
 
     // =====================================================
@@ -71,14 +72,12 @@ public class UserProfileController {
     // =====================================================
 
     @DeleteMapping
-    public ResponseEntity<String> deleteProfile(
-            Authentication authentication) {
+    public ResponseEntity<String> deleteProfile(Authentication authentication) {
 
-        userProfileService.deleteProfile(
-                authentication.getName());
+        User user = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(
-                "Profile deleted successfully.");
+        userProfileService.deleteProfile(user.getUsername());
 
+        return ResponseEntity.ok("Profile deleted successfully.");
     }
 }

@@ -4,6 +4,9 @@ import nus.iss.wellness.backend.dto.request.LoginRequest;
 import nus.iss.wellness.backend.dto.request.RegisterRequest;
 import nus.iss.wellness.backend.dto.response.ApiResponse;
 import nus.iss.wellness.backend.dto.response.LoginResponse;
+import nus.iss.wellness.backend.exception.BadRequestException;
+import nus.iss.wellness.backend.exception.EmailAlreadyExistsException;
+import nus.iss.wellness.backend.exception.UsernameAlreadyExistsException;
 import nus.iss.wellness.backend.model.Role;
 import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.repository.UserProfileRepository;
@@ -51,12 +54,16 @@ public class AuthService {
     // ==========================================================
     public ApiResponse register(RegisterRequest request) {
 
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new BadRequestException("Password and Confirm Password must be the same.");
+        }
+
         if (userRepo.existsByUsername(request.getUsername())) {
-            return new ApiResponse(false, "Username already exists");
+            throw new UsernameAlreadyExistsException("Username already exists.");
         }
 
         if (userRepo.existsByEmail(request.getEmail())) {
-            return new ApiResponse(false, "Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists.");
         }
 
         User user = new User();
@@ -64,8 +71,6 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setRole(Role.USER);
-
-        // SHA-512
         user.setPasswordHash(sha512(request.getPassword()));
 
         userRepo.save(user);
