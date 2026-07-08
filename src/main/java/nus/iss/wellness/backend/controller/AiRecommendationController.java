@@ -1,6 +1,7 @@
 package nus.iss.wellness.backend.controller;
 
 import nus.iss.wellness.backend.dto.response.AiRecommendationResponse;
+import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.service.AiRecommendationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class AiRecommendationController {
 
     @GetMapping("/latest")
     public ResponseEntity<?> getLatest(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         try {
             return recommendationService.getLatest(userId)
                     .map(ResponseEntity::ok)
@@ -39,7 +41,8 @@ public class AiRecommendationController {
      */
     @PostMapping("/generate")
     public ResponseEntity<?> generate(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(recommendationService.generate(userId));

@@ -38,8 +38,8 @@ public class ChatController {
             Authentication authentication,
             @RequestParam(required = false, defaultValue = "New Chat") String title) {
 
-//        User user = (User) authentication.getPrincipal();
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(chatService.createSession(userId, title));
@@ -52,7 +52,8 @@ public class ChatController {
     @GetMapping("/sessions")
     public ResponseEntity<List<ChatSessionResponse>> getSessions(Authentication authentication) {
 
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         return ResponseEntity.ok(chatService.getSessions(userId));
     }
 
@@ -64,7 +65,8 @@ public class ChatController {
             Authentication authentication,
             @PathVariable Long sessionId) {
 
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         chatService.deleteSession(userId, sessionId);
         return ResponseEntity.noContent().build();
     }
@@ -81,7 +83,8 @@ public class ChatController {
             @PathVariable Long sessionId,
             @Valid @RequestBody ChatRequest request) {
 
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         return ResponseEntity.ok(chatService.sendMessage(userId, sessionId, request));
     }
 
@@ -94,7 +97,8 @@ public class ChatController {
             Authentication authentication,
             @PathVariable Long sessionId) {
 
-        Long userId = (Long) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         return ResponseEntity.ok(chatService.getHistory(userId, sessionId));
     }
 }
