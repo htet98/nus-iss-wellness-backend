@@ -13,6 +13,7 @@ Flow:
 
 Author: Htet Nandar
 """
+import sys
 import os
 
 from services.vector_store import build_or_load_collection
