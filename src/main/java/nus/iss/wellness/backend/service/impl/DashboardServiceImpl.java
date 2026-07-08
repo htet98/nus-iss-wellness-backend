@@ -47,8 +47,6 @@ public class DashboardServiceImpl implements DashboardService {
                         new RuntimeException("User not found"));
 
         DashboardResponse dto = new DashboardResponse();
-
-        
         dto.setUsername(user.getUsername());
         
         
@@ -60,42 +58,57 @@ public class DashboardServiceImpl implements DashboardService {
   
         
 
-        // Query today's sleep  OrderByRecordDateDesc
+     // Query today's / latest sleep  OrderByRecordDateDesc
         wellnessRepository
         .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.sleep
                 )
-        .ifPresent(record ->
-                dto.setSleepHours(record.getValue()));
+        .ifPresent(record -> {
+            dto.setSleepHours(record.getValue());
+            if (record.getRecordDate() != null) {
+                dto.setSleepRecordDate(record.getRecordDate().toString());
+            }
+        });
 
-        // Query today's exercise
+     // Query today's / latest exercise
         wellnessRepository
         .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.exercise
                 )
-        .ifPresent(record ->
-                dto.setExerciseMinutes(
-                        record.getDurationMinutes()));
-
-        // Query today's water
+        .ifPresent(record -> {
+            dto.setExerciseMinutes(record.getDurationMinutes());
+            if (record.getRecordDate() != null) {
+                dto.setExerciseRecordDate(record.getRecordDate().toString());
+            }
+        });
+        
+     // Query today's / latest water
         wellnessRepository
         .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.water
                 )
-        .ifPresent(record ->
-                dto.setWaterIntake(record.getValue()));
+        .ifPresent(record -> {
+            dto.setWaterIntake(record.getValue());
+            if (record.getRecordDate() != null) {
+                dto.setWaterRecordDate(record.getRecordDate().toString());
+            }
+        });
         
-     // Query today's Steps
+     // Query today's / latest steps
         wellnessRepository
         .findTopByUserAndCategoryOrderByRecordDateDescCreatedAtDesc(
                 user,
                 WellnessRecord.Category.steps
                 )
-        .ifPresent(record ->
-                dto.setSteps(record.getValue()));
+        .ifPresent(record -> {
+            dto.setSteps(record.getValue());
+            if (record.getRecordDate() != null) {
+                dto.setStepsRecordDate(record.getRecordDate().toString());
+            }
+        });
 
         // Query today's Mood
         wellnessRepository
@@ -107,11 +120,15 @@ public class DashboardServiceImpl implements DashboardService {
         //        dto.setMood(record.getNotes()));
         .ifPresent(record -> { dto.setMood(getMoodLevel(record.getValue())); });
 
-        // Query latest recommendation
+        
+     // Query latest recommendation title and text content
         recommendationRepository
-        .findTopByUserOrderByGeneratedAtDesc(user)
-        .ifPresent(rec ->
-            dto.setLatestRecommendation(rec.getTitle()));
+            .findTopByUserOrderByGeneratedAtDesc(user)
+            .ifPresent(rec -> {
+                dto.setLatestRecommendation(rec.getTitle());
+                dto.setLatestRecommendationText(rec.getRecommendation());
+            });
+        
         
         
         // Calculating Average Value
@@ -145,16 +162,66 @@ public class DashboardServiceImpl implements DashboardService {
         dto.setAvgExerciseMinutes(avgExercise == null ? null : avgExercise.intValue());
          
         
+        // --- Calculate Wellness Scores ---
+        int stepsScore = calculateStepsScore(avgSteps);
+        int sleepScore = calculateSleepScore(avgSleep);
+        int exerciseScore = calculateExerciseScore(avgExercise);
+        int waterScore = calculateWaterScore(avgWater);
+
+        dto.setStepsScore(stepsScore);
+        dto.setSleepScore(sleepScore);
+        dto.setExerciseScore(exerciseScore);
+        dto.setWaterScore(waterScore);
+
+        // Overall Weighted Average Score (100 Max)
+        int overallScore = (int) Math.round(
+                (stepsScore * 0.25) +
+                (sleepScore * 0.30) +
+                (exerciseScore * 0.25) +
+                (waterScore * 0.20)
+        );
+        
+        dto.setOverallWellnessScore(overallScore);
+        
+        
         return dto;
     }
     
-    private String getMoodLevel(Double moodValue) {
+    
+ // --- Score Calculation Logic ---
+    private int calculateStepsScore(Double avgSteps) {
+        if (avgSteps == null || avgSteps <= 0) return 0;
+        return (int) Math.min(100, Math.round((avgSteps / 10000.0) * 100));
+    }
 
+    private int calculateSleepScore(Double avgSleep) {
+        if (avgSleep == null || avgSleep <= 0) return 0;
+        if (avgSleep >= 7.0 && avgSleep <= 9.0) {
+            return 100;
+        } else if (avgSleep >= 5.0 && avgSleep < 7.0) {
+            return (int) Math.round(100 - ((7.0 - avgSleep) * 25));
+        } else if (avgSleep < 5.0) {
+            return (int) Math.max(0, Math.round(avgSleep * 10));
+        } else { // avgSleep > 9.0
+            return (int) Math.max(50, Math.round(100 - ((avgSleep - 9.0) * 15)));
+        }
+    }
+
+    private int calculateExerciseScore(Double avgExerciseMins) {
+        if (avgExerciseMins == null || avgExerciseMins <= 0) return 0;
+        return (int) Math.min(100, Math.round((avgExerciseMins / 30.0) * 100));
+    }
+
+    private int calculateWaterScore(Double avgWaterLiters) {
+        if (avgWaterLiters == null || avgWaterLiters <= 0) return 0;
+        return (int) Math.min(100, Math.round((avgWaterLiters / 2.5) * 100));
+    }
+
+    private String getMoodLevel(Double moodValue) {
         if (moodValue == null) { return "Unknown"; }
         if (moodValue <= 2) { return "Low"; }
         if (moodValue <= 5) { return "Content"; }
         if (moodValue <= 8) { return "Good"; }
-
         return "Excellent";
     }
 
