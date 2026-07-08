@@ -28,28 +28,19 @@ import nus.iss.wellness.backend.exception.ResourceNotFoundException;
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
-    private final UserRepository userRepository;
 
     public UserProfileController(
-            UserProfileService userProfileService,
-            UserRepository userRepository) {
+            UserProfileService userProfileService) {
 
         this.userProfileService = userProfileService;
-        this.userRepository = userRepository;
     }
 
-    // =====================================================
     // Get Profile
-    // =====================================================
-
     @GetMapping
-    public ResponseEntity<UserProfileResponse> getProfile(Authentication authentication) {
+    public ResponseEntity<UserProfileResponse> getProfile(
+            Authentication authentication) {
 
-        Long userId = (Long) authentication.getPrincipal();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found."));
+        User user = (User) authentication.getPrincipal();
 
         UserProfileResponse response =
                 userProfileService.getProfile(user.getUsername());
@@ -57,20 +48,13 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
-    // =====================================================
     // Update Profile
-    // =====================================================
-
     @PutMapping
     public ResponseEntity<UserProfileResponse> updateProfile(
             Authentication authentication,
             @Valid @RequestBody UserProfileRequest request) {
 
-        Long userId = (Long) authentication.getPrincipal();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found."));
+        User user = (User) authentication.getPrincipal();
 
         UserProfileResponse response =
                 userProfileService.updateProfile(
@@ -80,18 +64,12 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
-    // =====================================================
     // Delete Profile
-    // =====================================================
-
     @DeleteMapping
-    public ResponseEntity<String> deleteProfile(Authentication authentication) {
+    public ResponseEntity<String> deleteProfile(
+            Authentication authentication) {
 
-        Long userId = (Long) authentication.getPrincipal();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found."));
+        User user = (User) authentication.getPrincipal();
 
         userProfileService.deleteProfile(user.getUsername());
 
