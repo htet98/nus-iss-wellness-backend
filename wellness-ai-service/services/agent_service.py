@@ -13,6 +13,7 @@ Flow:
 
 Author: Htet Nandar
 """
+import sys
 import os
 
 from services.vector_store import build_or_load_collection
@@ -55,13 +56,22 @@ class AgentService:
         server_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "wellness_mcp_server.py")
         )
+        # debug
+        print("[DEBUG] python command:", sys.executable)
+        print("[DEBUG] server path:", server_path, "| exists:", os.path.exists(server_path))
+         
         mcp_client = MultiServerMCPClient({
             "wellness": {
-                "command": "python",
+                # "command": "python",
+                "command": sys.executable,
                 "args": [server_path],
                 "transport": "stdio",
             }
         })
+        
+        # debug
+        print("[DEBUG] config:", mcp_client.connections)
+
         mcp_tools = await mcp_client.get_tools()
         print(f"[AI] MCP tools available: {[t.name for t in mcp_tools]}")
 

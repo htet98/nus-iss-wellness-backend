@@ -18,7 +18,7 @@ public class WellnessRecordController {
     @Autowired
     private WellnessRecordService wellnessRecordService;
 
- // Loh Si Hua - 27 Jun 2026
+ 	// For Add - Loh Si Hua
     @PostMapping("/records")
     public ResponseEntity<WellnessRecordResponse> createRecord(@Valid @RequestBody WellnessRecordRequest request) {
         WellnessRecordResponse response = wellnessRecordService.createRecord(request);
@@ -39,6 +39,14 @@ public class WellnessRecordController {
     @GetMapping("/userid/{userId}")
     public List<WellnessRecordResponse> getRecordsByUserId(@PathVariable Long userId) {
         return wellnessRecordService.getRecordsByUserId(userId);
+    }
+
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<Void> deleteRecord(@PathVariable Long recordId) {
+        wellnessRecordService.deleteRecord(recordId);
+
+        // Return 204 No Content upon successful deletion
+        return ResponseEntity.noContent().build();
     }
 }
 

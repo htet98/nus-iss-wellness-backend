@@ -5,7 +5,7 @@ import nus.iss.wellness.backend.dto.response.WellnessRecordResponse;
 
 import java.util.List;
 
-//Loh Si Hua - 27 Jun 2026
+	// For Create : Loh Si Hua
 public interface WellnessRecordService {
     WellnessRecordResponse createRecord(WellnessRecordRequest request);
 
@@ -13,6 +13,8 @@ public interface WellnessRecordService {
     WellnessRecordResponse updateRecord(Long recordId, WellnessRecordRequest request);
     WellnessRecordResponse getRecord(Long recordId);
     List<WellnessRecordResponse> getRecordsByUserId(Long userId);
+
+    void deleteRecord(Long recordId);
 }
 
 // We defined the service interface with 5 operations 

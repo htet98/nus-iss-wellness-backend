@@ -15,6 +15,8 @@ import nus.iss.wellness.backend.repository.UserRepository;
 
 import java.time.LocalDate;
 
+import static nus.iss.wellness.backend.security.HashUtil.sha512;
+
 //author: Junior
 
 @Service
@@ -58,14 +60,19 @@ public class UserProfileService {
 
         User user = getUser(username);
 
-        // Create profile if it doesn't exist
+        // Update password only if provided
+        if (request.getNewPassword() != null &&
+                !request.getNewPassword().trim().isEmpty()) {
+
+            user.setPasswordHash(sha512(request.getNewPassword()));
+            userRepository.save(user);
+        }
+
         UserProfile profile = profileRepository
                 .findByUser(user)
                 .orElseGet(() -> {
-
                     UserProfile newProfile = new UserProfile();
                     newProfile.setUser(user);
-
                     return newProfile;
                 });
 

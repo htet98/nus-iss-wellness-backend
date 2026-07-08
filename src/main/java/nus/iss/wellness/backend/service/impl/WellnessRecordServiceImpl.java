@@ -12,15 +12,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-//Loh Si Hua - 27 Jun 2026
-
-
 @Service
 public class WellnessRecordServiceImpl implements WellnessRecordService {
 
     @Autowired
     private WellnessRecordRepository wellnessRecordRepository;
-
+    
+    // For Create : Loh Si Hua
     @Override
     public WellnessRecordResponse createRecord(WellnessRecordRequest request) {
     	WellnessRecord record = wellnessRecordRepository
@@ -73,6 +71,16 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
                 .stream()
                 .map(WellnessRecordResponse::from)
                 .toList();
+    }
+
+    @Override
+    public void deleteRecord(Long recordId) {
+        // Find the record or throw 404 if it doesn't exit
+        WellnessRecord record = wellnessRecordRepository.findById(recordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Record not found"));
+
+        // Delete the record
+        wellnessRecordRepository.delete(record);
     }
 }
 

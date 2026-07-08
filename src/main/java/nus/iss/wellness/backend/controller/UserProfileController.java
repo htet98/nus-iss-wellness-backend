@@ -18,6 +18,9 @@ import nus.iss.wellness.backend.dto.request.UserProfileRequest;
 import nus.iss.wellness.backend.dto.response.UserProfileResponse;
 import nus.iss.wellness.backend.service.UserProfileService;
 
+import nus.iss.wellness.backend.repository.UserRepository;
+import nus.iss.wellness.backend.exception.ResourceNotFoundException;
+
 //author: Junior
 
 @RestController
@@ -30,15 +33,12 @@ public class UserProfileController {
             UserProfileService userProfileService) {
 
         this.userProfileService = userProfileService;
-
     }
 
-    // =====================================================
     // Get Profile
-    // =====================================================
-
     @GetMapping
-    public ResponseEntity<UserProfileResponse> getProfile(Authentication authentication) {
+    public ResponseEntity<UserProfileResponse> getProfile(
+            Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
@@ -48,10 +48,7 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
-    // =====================================================
     // Update Profile
-    // =====================================================
-
     @PutMapping
     public ResponseEntity<UserProfileResponse> updateProfile(
             Authentication authentication,
@@ -67,12 +64,10 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
-    // =====================================================
     // Delete Profile
-    // =====================================================
-
     @DeleteMapping
-    public ResponseEntity<String> deleteProfile(Authentication authentication) {
+    public ResponseEntity<String> deleteProfile(
+            Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
