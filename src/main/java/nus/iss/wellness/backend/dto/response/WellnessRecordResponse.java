@@ -6,7 +6,7 @@ import nus.iss.wellness.backend.model.WellnessRecord;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//Loh Si Hua - 27 Jun 2026, 2 Jul 2026
+	// Author: Si Hua
 public class WellnessRecordResponse {
 
     private Long id;

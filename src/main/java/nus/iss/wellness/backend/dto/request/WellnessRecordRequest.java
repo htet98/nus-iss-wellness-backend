@@ -5,7 +5,7 @@ import nus.iss.wellness.backend.model.WellnessRecord;
 
 import java.time.LocalDate;
 
-//Loh Si Hua - 27 Jun 2026
+	//Author: Si Hua
 public class WellnessRecordRequest {
 
     @NotNull

@@ -5,7 +5,7 @@ import nus.iss.wellness.backend.dto.response.WellnessRecordResponse;
 
 import java.util.List;
 
-//Loh Si Hua - 27 Jun 2026
+	// For Create : Loh Si Hua
 public interface WellnessRecordService {
     WellnessRecordResponse createRecord(WellnessRecordRequest request);
 

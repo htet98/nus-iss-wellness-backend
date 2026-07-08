@@ -18,7 +18,7 @@ public class WellnessRecordController {
     @Autowired
     private WellnessRecordService wellnessRecordService;
 
- // Loh Si Hua - 27 Jun 2026
+ 	// For Add - Loh Si Hua
     @PostMapping("/records")
     public ResponseEntity<WellnessRecordResponse> createRecord(@Valid @RequestBody WellnessRecordRequest request) {
         WellnessRecordResponse response = wellnessRecordService.createRecord(request);
