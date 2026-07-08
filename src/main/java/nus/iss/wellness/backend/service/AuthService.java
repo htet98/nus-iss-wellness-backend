@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import nus.iss.wellness.backend.security.HashUtil;
 
 //author: Junior
 
@@ -49,9 +50,7 @@ public class AuthService {
         this.jwtOutputMaxEntries = Math.max(1, jwtOutputMaxEntries);
     }
 
-    // ==========================================================
     // REGISTER
-    // ==========================================================
     public ApiResponse register(RegisterRequest request) {
 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
@@ -71,22 +70,20 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setRole(Role.USER);
-        user.setPasswordHash(sha512(request.getPassword()));
+        user.setPasswordHash(HashUtil.sha512(request.getPassword()));
 
         userRepo.save(user);
 
         return new ApiResponse(true, "Registration Successful");
     }
 
-    // ==========================================================
     // LOGIN
-    // ==========================================================
-    public LoginResponse login(LoginRequest request) {
+   public LoginResponse login(LoginRequest request) {
 
         User user = userRepo.findByUsername(request.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
 
-        String hashedPassword = sha512(request.getPassword());
+        String hashedPassword = HashUtil.sha512(request.getPassword());
 
         if (!user.getPasswordHash().equals(hashedPassword)) {
             throw new IllegalArgumentException("Invalid username or password");
@@ -114,9 +111,8 @@ public class AuthService {
         return response;
     }
 
-    // ==========================================================
+
     // LOGOUT
-    // ==========================================================
     public void logout(String token) {
 
         String username = jwtService
@@ -132,27 +128,7 @@ public class AuthService {
         userRepo.save(user);
     }
 
-    // ==========================================================
-    // SHA-512
-    // ==========================================================
-    private String sha512(String value) {
-
-        try {
-
-            MessageDigest digest = MessageDigest.getInstance("SHA-512");
-
-            byte[] hash = digest.digest(value.getBytes(StandardCharsets.UTF_8));
-
-            return HexFormat.of().formatHex(hash);
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // ==========================================================
     // SAVE TOKEN
-    // ==========================================================
     private void saveTokenToLocalFile(String username, String token) {
 
         try {

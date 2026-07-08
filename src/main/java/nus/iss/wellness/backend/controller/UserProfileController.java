@@ -18,6 +18,9 @@ import nus.iss.wellness.backend.dto.request.UserProfileRequest;
 import nus.iss.wellness.backend.dto.response.UserProfileResponse;
 import nus.iss.wellness.backend.service.UserProfileService;
 
+import nus.iss.wellness.backend.repository.UserRepository;
+import nus.iss.wellness.backend.exception.ResourceNotFoundException;
+
 //author: Junior
 
 @RestController
@@ -25,12 +28,14 @@ import nus.iss.wellness.backend.service.UserProfileService;
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
+    private final UserRepository userRepository;
 
     public UserProfileController(
-            UserProfileService userProfileService) {
+            UserProfileService userProfileService,
+            UserRepository userRepository) {
 
         this.userProfileService = userProfileService;
-
+        this.userRepository = userRepository;
     }
 
     // =====================================================
@@ -40,7 +45,11 @@ public class UserProfileController {
     @GetMapping
     public ResponseEntity<UserProfileResponse> getProfile(Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        Long userId = (Long) authentication.getPrincipal();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
 
         UserProfileResponse response =
                 userProfileService.getProfile(user.getUsername());
@@ -57,7 +66,11 @@ public class UserProfileController {
             Authentication authentication,
             @Valid @RequestBody UserProfileRequest request) {
 
-        User user = (User) authentication.getPrincipal();
+        Long userId = (Long) authentication.getPrincipal();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
 
         UserProfileResponse response =
                 userProfileService.updateProfile(
@@ -74,7 +87,11 @@ public class UserProfileController {
     @DeleteMapping
     public ResponseEntity<String> deleteProfile(Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        Long userId = (Long) authentication.getPrincipal();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
 
         userProfileService.deleteProfile(user.getUsername());
 

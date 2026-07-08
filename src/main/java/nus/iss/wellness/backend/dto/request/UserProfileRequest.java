@@ -17,6 +17,7 @@ public class UserProfileRequest {
     private Double heightCm;
     private Double weightKg;
     private FitnessGoal fitnessGoal;
+    private String newPassword;
 
     public UserProfileRequest() {
     }
@@ -83,5 +84,13 @@ public class UserProfileRequest {
 
     public void setFitnessGoal(FitnessGoal fitnessGoal) {
         this.fitnessGoal = fitnessGoal;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }
