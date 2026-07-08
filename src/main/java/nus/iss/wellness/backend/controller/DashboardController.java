@@ -3,6 +3,7 @@ package nus.iss.wellness.backend.controller;
 
 import nus.iss.wellness.backend.dto.response.DashboardResponse;
 import nus.iss.wellness.backend.dto.response.UserProfileResponse;
+import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.service.DashboardService;
 
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,8 @@ public class DashboardController {
     public ResponseEntity<DashboardResponse> getDashboard(
     		 Authentication authentication) {
 
-        Long userId = (Long)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         DashboardResponse response = dashboardService.getDashboard(userId);
 
         return ResponseEntity.ok(response);

@@ -2,6 +2,7 @@ package nus.iss.wellness.backend.controller;
 
 import nus.iss.wellness.backend.dto.response.DashboardResponse;
 import nus.iss.wellness.backend.dto.response.WellnessHistoryResponse;
+import nus.iss.wellness.backend.model.User;
 import nus.iss.wellness.backend.service.WellnessHistoryService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,8 @@ public class WellnessHistoryController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         // Extract the secure User ID from the JWT principal
-        Long userId = (Long) authentication.getPrincipal(); 
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
         
         // Pass the verified userId down to your business logic layer
         WellnessHistoryResponse response = historyService.getHistory(userId, startDate, endDate);

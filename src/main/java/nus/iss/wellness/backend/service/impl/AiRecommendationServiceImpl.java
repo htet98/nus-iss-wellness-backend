@@ -94,6 +94,17 @@ public class AiRecommendationServiceImpl implements AiRecommendationService {
     @Transactional
     public AiRecommendationResponse generate(Long userId) {
         User user = findUser(userId);
+
+        // Guard against race conditions: if a fresh recommendation was just created
+        Optional<AiRecommendation> existing =
+                recommendationRepository.findTopByUserOrderByGeneratedAtDesc(user);
+        if (existing.isPresent()) {
+            long hoursOld = Duration.between(existing.get().getGeneratedAt(), LocalDateTime.now()).toHours();
+            if (hoursOld < STALE_HOURS) {
+                log.info("[Recommendation] Fresh record already exists for userId={} — skipping AI call", userId);
+                return AiRecommendationResponse.from(existing.get());
+            }
+        }
         log.info("[Recommendation] generate() called for userId={} — calling Python AI service…", userId);
 
         // Collect the user's most recent wellness stats
