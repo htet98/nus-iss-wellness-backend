@@ -45,7 +45,7 @@ def _to_openai_tools(lc_tools: list) -> list:
 OPENROUTER_BASE        = "https://openrouter.ai/api/v1"
 CHAT_MODEL_OPENROUTER  = "openai/gpt-4o-mini"   # OpenRouter format
 CHAT_MODEL_OPENAI      = "gpt-4o-mini"           # Direct OpenAI format
-MAX_ITERATIONS         = 5
+MAX_ITERATIONS         = 3
 
 
 # ── Shared workflow state ──────────────────────────────────────────────────────
@@ -71,24 +71,25 @@ ROUTE_TOOLS = {
 # ── Specialist system prompts ──────────────────────────────────────────────────
 
 SYSTEM_PROMPTS = {
-                    "nutrition": """\
+    "nutrition": """\
                 You are a Nutrition & Diet specialist for the Wellness app.
-                
+
                 Your focus: meal planning, calorie intake, macronutrients, healthy eating habits,
                 food choices, dietary goals, and weight management through diet.
-                
+
                 Tools available:
                 - search_wellness_knowledge — search the evidence-based wellness knowledge base
                 - calculate_daily_calories  — estimate daily calorie needs (TDEE)
-                
+
                 Guidelines:
-                - Always call search_wellness_knowledge before giving dietary advice.
-                - Call calculate_daily_calories when the user provides weight, height, age, and activity level.
+                - Call search_wellness_knowledge ONCE, then answer immediately using the results.
+                - Call calculate_daily_calories ONCE if the user provides weight, height, age, and activity level.
+                - Do NOT call search_wellness_knowledge more than once.
                 - Keep answers practical, specific, and motivating.
                 - IMPORTANT: Reply in 2–3 sentences maximum.
                 """,
 
-                    "fitness": """\
+    "fitness": """\
                 You are a Fitness & Exercise specialist for the Wellness app.
 
                 Your focus: workout plans, physical activity, step goals, strength training,
@@ -98,13 +99,13 @@ SYSTEM_PROMPTS = {
                 - search_wellness_knowledge — search the evidence-based wellness knowledge base
 
                 Guidelines:
-                - Always call search_wellness_knowledge before recommending any exercise programme.
+                - Call search_wellness_knowledge ONCE, then answer immediately using the results.
+                - Do NOT call search_wellness_knowledge more than once.
                 - Provide specific, actionable advice (sets, reps, duration, frequency where relevant).
-                - Adapt to the user's fitness level if they mention it.
                 - IMPORTANT: Reply in 2–3 sentences maximum.
                 """,
 
-                    "mental": """\
+    "mental": """\
                 You are a Mental Wellness specialist for the Wellness app.
 
                 Your focus: stress management, sleep hygiene, mood improvement, mindfulness,
@@ -114,13 +115,14 @@ SYSTEM_PROMPTS = {
                 - search_wellness_knowledge — search the evidence-based wellness knowledge base
 
                 Guidelines:
+                - Call search_wellness_knowledge ONCE, then answer immediately using the results.
+                - Do NOT call search_wellness_knowledge more than once.
                 - Be empathetic and supportive — the user may be in a vulnerable state.
-                - Always call search_wellness_knowledge to ground your advice in evidence.
                 - Provide practical, step-by-step strategies the user can act on immediately.
                 - IMPORTANT: Reply in 2–3 sentences maximum.
                 """,
 
-                    "metrics": """\
+    "metrics": """\
                 You are a Health Metrics specialist for the Wellness app.
 
                 Your focus: BMI calculation, healthy weight ranges, daily calorie needs (TDEE),
@@ -129,15 +131,16 @@ SYSTEM_PROMPTS = {
                 Tools available:
                 - calculate_bmi             — ALWAYS use when the user provides weight + height
                 - calculate_daily_calories  — ALWAYS use when the user asks about calorie targets
-                - search_wellness_knowledge — use for context on what the numbers mean
+                - search_wellness_knowledge — use ONCE for context on what the numbers mean
 
                 Guidelines:
                 - Never estimate BMI or TDEE manually — always call the calculator tools.
+                - Call each tool ONCE only. Do not repeat tool calls.
                 - After calculating, explain what the result means and what action to take.
                 - IMPORTANT: Reply in 2–3 sentences maximum.
                 """,
 
-                    "general": """\
+    "general": """\
                 You are a friendly, knowledgeable wellness assistant for the Wellness app.
 
                 You help users with any wellness topic: nutrition, fitness, sleep, mental health,
@@ -149,22 +152,23 @@ SYSTEM_PROMPTS = {
                 - calculate_daily_calories  — estimate daily calorie needs (TDEE)
 
                 Guidelines:
-                - Use search_wellness_knowledge for factual wellness questions.
-                - Use calculate_bmi / calculate_daily_calories when the user provides measurements.
+                - Call search_wellness_knowledge ONCE only, then answer immediately using the results.
+                - Call calculate_bmi / calculate_daily_calories ONCE if the user provides measurements.
+                - Do NOT repeat any tool call.
                 - IMPORTANT: Reply in 2–3 sentences maximum.
                 """,
-                }
+}
 
 
 # ── Shared agent-loop helper (called by each handle_* function) ────────────────
 
 def _run_agent(
-    route: str,
-    state: WellnessState,
-    client: OpenAI,
-    model: str,
-    openai_tools: list,
-    tool_registry: dict,
+        route: str,
+        state: WellnessState,
+        client: OpenAI,
+        model: str,
+        openai_tools: list,
+        tool_registry: dict,
 ) -> dict:
     """Run the specialist agent loop with MCP tools filtered for the given route."""
     allowed    = set(ROUTE_TOOLS[route])
@@ -184,6 +188,8 @@ def _run_agent(
 
     messages.append({"role": "user", "content": state["message"]})
 
+    called_tools: set[str] = set()   # prevent duplicate tool calls
+
     for _ in range(MAX_ITERATIONS):
         response = client.chat.completions.create(
             model=model,
@@ -202,10 +208,16 @@ def _run_agent(
         for tc in assistant_msg.tool_calls:
             fn = tc.function.name
             try:
-                if fn in allowed and fn in tool_registry:
-                    # Call the LangChain MCP tool — .invoke() accepts a dict
+                if fn in called_tools:
+                    # Already called this tool — return cached result notice so LLM stops looping
+                    print(f"[Tool]   skipping duplicate call to {fn}")
+                    tool_result = "Already called. Use the result from the previous call to answer."
+                elif fn in allowed and fn in tool_registry:
+                    called_tools.add(fn)  # mark BEFORE invoke so parallel/retry calls are blocked
+                    print(f"[Tool]   calling {fn}({tc.function.arguments})")
                     result = tool_registry[fn].invoke(json.loads(tc.function.arguments))
                     tool_result = result if isinstance(result, str) else json.dumps(result)
+                    print(f"[Tool]   {fn} → done")
                 else:
                     tool_result = f"Tool '{fn}' not available."
             except Exception as e:
@@ -252,11 +264,12 @@ def build_wellness_workflow(api_key: str, base_url: str | None = None, mcp_tools
                 Message: {state["message"]}
                 
                 Return only one word."""
-                }],
-                temperature=0,
-            )
+            }],
+            temperature=0,
+        )
         raw = response.choices[0].message.content.strip().lower()
         route = raw if raw in ROUTE_TOOLS else "general"
+        print(f"\n[Router] '{state['message'][:60]}' → specialist: {route.upper()}")
         return {"route": route}
 
     # ── Route selector (matches course: route_decision) ───────────────────────
