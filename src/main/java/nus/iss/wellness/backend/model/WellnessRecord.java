@@ -1,13 +1,13 @@
 package nus.iss.wellness.backend.model;
 
-// Cecil - 2 Jul 2026
+// Author: Cecil
 import nus.iss.wellness.backend.model.WellnessCategoryEnum;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-// Loh Si Hua - 27 Jun 2026
+// Author: Si Hua
 
 @Entity
 @Table(name = "wellness_records")

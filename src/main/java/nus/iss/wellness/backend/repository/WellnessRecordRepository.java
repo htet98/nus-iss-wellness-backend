@@ -92,7 +92,7 @@ public interface WellnessRecordRepository extends JpaRepository<WellnessRecord, 
     
     
 
-  //Loh Si Hua - 27 Jun 2026
+  // Author : Si Hua
     List<WellnessRecord> findByUserIdOrderByRecordDateDesc(Long userId);
 
     List<WellnessRecord> findByUserIdAndCategoryOrderByRecordDateDesc(Long userId, WellnessRecord.Category category);
