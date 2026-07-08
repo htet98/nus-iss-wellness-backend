@@ -63,7 +63,7 @@ class AgentService:
         mcp_client = MultiServerMCPClient({
             "wellness": {
                 # "command": "python",
-                "command": sys.executable, 
+                "command": sys.executable,
                 "args": [server_path],
                 "transport": "stdio",
             }
