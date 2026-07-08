@@ -40,6 +40,14 @@ public class WellnessRecordController {
     public List<WellnessRecordResponse> getRecordsByUserId(@PathVariable Long userId) {
         return wellnessRecordService.getRecordsByUserId(userId);
     }
+
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<Void> deleteRecord(@PathVariable Long recordId) {
+        wellnessRecordService.deleteRecord(recordId);
+
+        // Return 204 No Content upon successful deletion
+        return ResponseEntity.noContent().build();
+    }
 }
 
 //We added 5 REST endpoints under /api/wellness/records — POST to create (Si Hua), 

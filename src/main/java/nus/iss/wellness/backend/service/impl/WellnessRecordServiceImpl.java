@@ -74,6 +74,16 @@ public class WellnessRecordServiceImpl implements WellnessRecordService {
                 .map(WellnessRecordResponse::from)
                 .toList();
     }
+
+    @Override
+    public void deleteRecord(Long recordId) {
+        // Find the record or throw 404 if it doesn't exit
+        WellnessRecord record = wellnessRecordRepository.findById(recordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Record not found"));
+
+        // Delete the record
+        wellnessRecordRepository.delete(record);
+    }
 }
 
 //We defined the service interface with 5 operations 

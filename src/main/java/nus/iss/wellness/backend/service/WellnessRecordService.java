@@ -13,6 +13,8 @@ public interface WellnessRecordService {
     WellnessRecordResponse updateRecord(Long recordId, WellnessRecordRequest request);
     WellnessRecordResponse getRecord(Long recordId);
     List<WellnessRecordResponse> getRecordsByUserId(Long userId);
+
+    void deleteRecord(Long recordId);
 }
 
 // We defined the service interface with 5 operations 
