@@ -31,13 +31,13 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // ---------------- REGISTER ----------------
+    //REGISTER
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    // ---------------- LOGIN ----------------
+    //LOGIN
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request) {
@@ -47,7 +47,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // ---------------- LOGOUT ----------------
+    //LOGOUT
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(
             HttpServletRequest request,
