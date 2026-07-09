@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ *  Author: Htet Nandar
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -40,7 +42,35 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        // Show real message in dev so errors are visible
+        String message = ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred";
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, message);
+    }
+
+    //Username exist : Junior
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<?> handleUsernameExists(
+            UsernameAlreadyExistsException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of(
+                        "success", false,
+                        "message", ex.getMessage()
+                ));
+    }
+
+    //Email exist : Junior
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<?> handleEmailExists(
+            EmailAlreadyExistsException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of(
+                        "success", false,
+                        "message", ex.getMessage()
+                ));
     }
 
     private ResponseEntity<Map<String, Object>> buildError(HttpStatus status, String message) {

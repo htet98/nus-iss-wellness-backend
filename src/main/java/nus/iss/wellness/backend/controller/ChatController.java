@@ -1,9 +1,104 @@
 package nus.iss.wellness.backend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import nus.iss.wellness.backend.dto.request.ChatRequest;
+import nus.iss.wellness.backend.dto.response.ChatMessageResponse;
+import nus.iss.wellness.backend.dto.response.ChatResponse;
+import nus.iss.wellness.backend.dto.response.ChatSessionResponse;
+import nus.iss.wellness.backend.model.User;
+import nus.iss.wellness.backend.service.ChatService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * Author: Htet Nandar
+ */
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
+
+    private final ChatService chatService;
+
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
+    // ── Sessions ───────────────────────────────────────────────────────────
+
+    /**
+     * POST /api/chat/sessions?title=My+Chat
+     * Requires: Authorization: Bearer <token>
+     */
+    @PostMapping("/sessions")
+    public ResponseEntity<ChatSessionResponse> createSession(
+            Authentication authentication,
+            @RequestParam(required = false, defaultValue = "New Chat") String title) {
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(chatService.createSession(userId, title));
+    }
+
+    /**
+     * GET /api/chat/sessions
+     * Returns all sessions for the authenticated user, newest first.
+     */
+    @GetMapping("/sessions")
+    public ResponseEntity<List<ChatSessionResponse>> getSessions(Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        return ResponseEntity.ok(chatService.getSessions(userId));
+    }
+
+    /**
+     * DELETE /api/chat/sessions/{sessionId}
+     */
+    @DeleteMapping("/sessions/{sessionId}")
+    public ResponseEntity<Void> deleteSession(
+            Authentication authentication,
+            @PathVariable Long sessionId) {
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        chatService.deleteSession(userId, sessionId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ── Messages ───────────────────────────────────────────────────────────
+
+    /**
+     * POST /api/chat/sessions/{sessionId}/messages
+     * Body: { "message": "How do I improve my sleep?", "userContext": {...} }
+     */
+    @PostMapping("/sessions/{sessionId}/messages")
+    public ResponseEntity<ChatResponse> sendMessage(
+            Authentication authentication,
+            @PathVariable Long sessionId,
+            @Valid @RequestBody ChatRequest request) {
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        return ResponseEntity.ok(chatService.sendMessage(userId, sessionId, request));
+    }
+
+    /**
+     * GET /api/chat/sessions/{sessionId}/messages
+     * Returns full message history for the session, oldest first.
+     */
+    @GetMapping("/sessions/{sessionId}/messages")
+    public ResponseEntity<List<ChatMessageResponse>> getHistory(
+            Authentication authentication,
+            @PathVariable Long sessionId) {
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getUserId();
+        return ResponseEntity.ok(chatService.getHistory(userId, sessionId));
+    }
 }

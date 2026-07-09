@@ -1,5 +1,23 @@
 package nus.iss.wellness.backend.service;
 
-public interface WellnessRecordService {
+import nus.iss.wellness.backend.dto.request.WellnessRecordRequest;
+import nus.iss.wellness.backend.dto.response.WellnessRecordResponse;
 
+import java.util.List;
+
+	// For Create : Loh Si Hua
+public interface WellnessRecordService {
+    WellnessRecordResponse createRecord(WellnessRecordRequest request);
+
+    // For Update : Tan pang wee
+    WellnessRecordResponse updateRecord(Long recordId, WellnessRecordRequest request);
+    WellnessRecordResponse getRecord(Long recordId);
+    List<WellnessRecordResponse> getRecordsByUserId(Long userId);
+
+    void deleteRecord(Long recordId);
 }
+
+// We defined the service interface with 5 operations 
+// (create (Si Hua), get all, get by category, get by id (Cecil), update (pang wee) , delete (Thiha)), 
+// then implemented them in the Impl class. The service layer sits 
+// between the controller and repository — it contains the business logic.

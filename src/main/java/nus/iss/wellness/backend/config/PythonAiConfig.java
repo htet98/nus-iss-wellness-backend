@@ -2,7 +2,9 @@ package nus.iss.wellness.backend.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
+/**
+ *  Author: Htet Nandar
+ */
 @Configuration
 @ConfigurationProperties(prefix = "ai.python-service")
 public class PythonAiConfig {

@@ -1,0 +1,241 @@
+# ============================================================
+# WELLNESS KNOWLEDGE BASE
+# Used by the RAG tool in the agentic wellness assistant.
+# ============================================================
+
+
+# SLEEP
+# ─────
+
+Adults need 7–9 hours of sleep per night for optimal health. Consistent sleep and wake times — even on weekends — regulate the circadian rhythm and improve sleep quality. Avoid screens 1 hour before bed because blue light suppresses melatonin. A cool room (15–18 °C) promotes deeper sleep. Sleep deprivation impairs memory, mood, and immune function.
+
+Sleep stages: NREM stages 1–3 handle physical repair; REM sleep consolidates memory and emotional processing. Both are essential. A full sleep cycle is approximately 90 minutes; aim for 5 complete cycles (≈7.5 hours) per night.
+
+Napping: A 20-minute nap before 3 pm boosts alertness without disrupting night sleep. Naps longer than 30 minutes cause grogginess (sleep inertia). A "caffeine nap" — drinking coffee immediately before a 20-minute nap — combines caffeine's delayed kick with the nap's immediate benefit.
+
+Insomnia strategies: cognitive behavioural therapy for insomnia (CBT-I) is more effective than sleep medication long-term and has no side-effects. Core techniques include sleep restriction therapy, stimulus control, and sleep hygiene. Progressive muscle relaxation and deep breathing are useful add-ons.
+
+Sleep hygiene checklist:
+- Keep the bedroom dark and quiet.
+- Reserve the bed only for sleep and sex — not working or watching TV.
+- Avoid caffeine after 2 pm (caffeine half-life is 5–6 hours).
+- Limit alcohol — it fragments sleep in the second half of the night.
+- Exercise regularly, but not within 2 hours of bedtime for some people.
+
+Melatonin supplements (0.5–3 mg) can help shift sleep timing (e.g. jet lag) but are not a strong sedative. They work best taken 30–60 minutes before your desired bedtime.
+
+
+# EXERCISE
+# ────────
+
+The WHO recommends at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous activity per week, plus muscle-strengthening exercises on 2 or more days per week.
+
+Types of exercise:
+- Aerobic (cardio): running, cycling, swimming, brisk walking — improves heart health, burns calories, boosts mood via endorphins and serotonin.
+- Strength training: resistance exercises (weights, resistance bands, bodyweight) preserve and build muscle mass, increase resting metabolism, support bone density, and improve insulin sensitivity.
+- Flexibility: yoga, static stretching — reduces injury risk, improves posture and range of motion. Hold static stretches 20–30 seconds after exercise, not before.
+- Balance training: important for older adults to prevent falls. Single-leg exercises, Tai Chi.
+- HIIT (High-Intensity Interval Training): short bursts at near-maximal effort followed by rest. Efficient for cardiovascular fitness and fat loss in less time. E.g. 20s sprint / 40s rest × 10 rounds.
+
+Progressive overload: gradually increasing weight, reps, sets, or training density over time is essential for continued strength and muscle gains. The body adapts to the same stimulus within 4–6 weeks.
+
+Running improvement:
+- Interval training 1–2× per week builds speed (e.g. 6 × 400 m at 5 km race pace with 90 s rest).
+- Easy aerobic runs 2–3× per week build aerobic base (conversational pace, 60–70% max HR).
+- One rest or active recovery day per week prevents overtraining.
+- Increase weekly mileage by no more than 10% per week to avoid injury.
+
+Strength training:
+- Allow 48 hours recovery between sessions targeting the same muscle group.
+- Common splits: upper/lower (4 days), push-pull-legs (6 days), full body (3 days).
+- Compound movements (squat, deadlift, bench press, pull-up) recruit the most muscle and stimulate the most growth.
+- Aim for 3–5 sets of 6–12 reps at 65–80% of 1-rep max for hypertrophy.
+
+Bodyweight exercises (no equipment needed):
+- Push-ups: chest, shoulders, triceps. Elevate feet for more shoulder emphasis.
+- Squats and lunges: quads, glutes, hamstrings.
+- Pull-ups / inverted rows: back and biceps.
+- Plank and dead bug: core stability.
+- Burpees: full-body cardio.
+
+Signs of overtraining: persistent fatigue, declining performance, irritability, poor sleep, frequent illness. Remedy: reduce volume by 40–50% for 1–2 weeks.
+
+Exercise and mood: a single 20–30 minute moderate-intensity session raises mood for 1–3 hours. Regular exercise reduces risk of depression and anxiety by 30–40% over the long term.
+
+
+# NUTRITION
+# ─────────
+
+Macronutrients:
+- Protein (4 kcal/g): essential for muscle repair and satiety. Target 1.6–2.2 g per kg body weight for those doing resistance training. Sources: lean meat, fish, eggs, dairy, legumes, tofu, tempeh.
+- Carbohydrates (4 kcal/g): primary energy source for the brain and muscles. Choose complex carbs (oats, brown rice, sweet potato, quinoa, wholegrain bread) for sustained energy. Limit refined sugars and ultra-processed foods.
+- Fats (9 kcal/g): necessary for hormone production, brain health, and fat-soluble vitamins (A, D, E, K). Prioritise unsaturated fats (olive oil, avocado, nuts, fatty fish). Limit saturated fats and avoid trans fats.
+
+Micronutrients commonly deficient:
+- Vitamin D: essential for bone health and immunity. Sources: sunlight, fatty fish, fortified milk.
+- Iron: important for oxygen transport. Deficiency causes fatigue. Sources: red meat, spinach, lentils. Pair plant iron with vitamin C to improve absorption.
+- Magnesium: supports sleep, muscle function, blood sugar. Sources: nuts, seeds, leafy greens, dark chocolate.
+- Calcium: bone and teeth health. Sources: dairy, fortified soy milk, leafy greens, sardines.
+- Omega-3 fatty acids (EPA/DHA): anti-inflammatory, heart and brain health. Sources: salmon, mackerel, sardines, walnuts, flaxseed.
+
+Weight management:
+- A caloric deficit of approximately 500 kcal/day leads to roughly 0.5 kg fat loss per week.
+- Crash diets slow metabolism, cause muscle loss, and lead to rebound weight gain.
+- Protein is the most satiating macronutrient — higher protein intake helps maintain muscle during a deficit.
+
+Meal timing:
+- Pre-workout: a mixed carb + protein meal 2–3 hours before exercise, or a small snack (banana, protein shake) 30–60 minutes before.
+- Post-workout: consume protein within 30–60 minutes to maximise muscle protein synthesis. 20–40 g protein is a practical target.
+- Intermittent fasting (16:8, 5:2): effective for some people for weight management. No magic beyond caloric restriction; choose the eating pattern you can sustain.
+
+Fibre: aim for 25–38 g/day from vegetables, fruit, legumes, and wholegrains. Fibre feeds beneficial gut bacteria, improves satiety, and reduces risk of colorectal cancer.
+
+Gut health: a diverse diet with 30+ different plant foods per week supports microbiome diversity. Fermented foods (yoghurt, kefir, kimchi, tempeh) add beneficial probiotics. Prebiotics (garlic, onion, oats, banana) feed good bacteria.
+
+
+# HYDRATION
+# ─────────
+
+Adults should aim for 2–3 litres of water per day (total fluid including food), more in hot and humid climates like Singapore, and more during exercise. Dehydration of even 1–2% of body weight impairs cognitive performance and physical endurance. Urine colour is a reliable indicator — pale yellow is ideal; dark yellow or amber means drink more.
+
+Electrolytes (sodium, potassium, magnesium, chloride) are lost in sweat and need replacement after intense or prolonged exercise. Sports drinks or electrolyte tablets are useful during sessions over 60–90 minutes.
+
+Caffeine (coffee, tea) is a mild diuretic but the fluid intake from caffeinated beverages still contributes positively to daily hydration balance in moderate amounts (up to 3–4 cups/day).
+
+Signs of dehydration: thirst, dark urine, headache, fatigue, difficulty concentrating, dizziness.
+
+
+# WEIGHT MANAGEMENT
+# ─────────────────
+
+Body composition (muscle-to-fat ratio) is more important than scale weight alone. Resistance training while in a caloric deficit preserves muscle. Track progress with body measurements, progress photos, and how clothes fit — not just scale weight.
+
+Sustainable fat loss: 0.5–1% of body weight per week. Losing faster typically means losing muscle alongside fat. Very low calorie diets (<1,200 kcal/day) are hard to sustain and often backfire.
+
+BMI (Body Mass Index) is a population-level screening tool, not a perfect individual measure. It does not account for muscle mass or fat distribution. Asian populations have higher metabolic risk at lower BMIs; the Asian cut-off for overweight is BMI ≥ 23 (vs. ≥ 25 globally).
+
+Visceral fat (fat around internal organs) is more harmful than subcutaneous fat. Waist circumference is a better predictor of metabolic risk: >90 cm (men) or >80 cm (women) signals elevated risk for Asian adults.
+
+Factors that affect weight: sleep quality, stress (cortisol drives fat storage), gut microbiome, medication side-effects, thyroid function, hormonal changes.
+
+
+# MENTAL HEALTH & STRESS
+# ──────────────────────
+
+Exercise is one of the most effective interventions for mild-to-moderate depression and anxiety. Even a 20-minute walk raises mood for several hours via endorphin and serotonin release.
+
+Stress management techniques:
+- Diaphragmatic breathing: activates the parasympathetic nervous system within minutes. Breathe into the belly, not the chest.
+- Box breathing: 4 s inhale → 4 s hold → 4 s exhale → 4 s hold. Repeat 4–6 times.
+- 4-7-8 breathing: inhale 4 s, hold 7 s, exhale 8 s. Useful before sleep.
+- Progressive muscle relaxation: tense and release each muscle group from toes to head.
+
+Mindfulness and meditation: even 5–10 minutes of daily practice reduces anxiety, improves emotional regulation, and can lower blood pressure over weeks. Mindfulness-Based Stress Reduction (MBSR) is an evidence-based 8-week programme.
+
+Cognitive distortions: common unhelpful thinking patterns include catastrophising, all-or-nothing thinking, mind-reading, and personalisation. Cognitive Behavioural Therapy (CBT) helps identify and reframe these patterns.
+
+Social connection: strong social relationships are one of the most robust predictors of longevity and wellbeing. Prioritise face-to-face interaction. Loneliness has health effects comparable to smoking 15 cigarettes a day.
+
+Journalling: writing 3 things you are grateful for each day has measurable effects on mood within 2 weeks. Expressive writing about stressful events for 15–20 minutes can reduce their emotional impact.
+
+When to seek professional help: persistent sadness or anxiety lasting more than 2 weeks, significant changes in sleep or appetite, loss of interest in activities, difficulty functioning at work or in relationships.
+
+
+# STEPS & SEDENTARY BEHAVIOUR
+# ────────────────────────────
+
+10,000 steps per day is a popular target, but research shows meaningful health benefits begin at approximately 7,000–8,000 steps/day for most adults. Each additional 1,000 steps reduces cardiovascular risk. Walking breaks of 5–10 minutes every hour offset the health risks of prolonged sitting.
+
+Prolonged sitting is an independent risk factor for cardiovascular disease, metabolic syndrome, and poor posture — even if you exercise regularly. Aim to stand or move for at least 2 minutes every 30–60 minutes during desk work.
+
+A brisk 30-minute walk (approximately 3,000–4,000 steps) most days meets WHO aerobic activity recommendations and has significant cardiovascular benefits.
+
+
+# HEART HEALTH
+# ────────────
+
+Key risk factors for cardiovascular disease: high blood pressure, high LDL cholesterol, smoking, diabetes, obesity, physical inactivity, family history, age, and chronic stress.
+
+Normal blood pressure: below 120/80 mmHg. Elevated: 120–129/<80. Stage 1 hypertension: 130–139/80–89. Diet, exercise, and weight loss can reduce blood pressure by 5–10 mmHg without medication.
+
+Diet for heart health: emphasise vegetables, fruit, wholegrains, legumes, nuts, olive oil, and fish (Mediterranean diet). Limit red and processed meat, added sugar, and ultra-processed food. Reduce dietary sodium (aim <2,300 mg/day).
+
+Cholesterol: LDL ("bad") should ideally be below 2.6 mmol/L. HDL ("good") should be above 1.0 mmol/L (men) or 1.2 mmol/L (women). Triglycerides below 1.7 mmol/L.
+
+Regular aerobic exercise lowers blood pressure, raises HDL, reduces triglycerides, and improves arterial flexibility.
+
+
+# DIABETES PREVENTION & BLOOD SUGAR
+# ──────────────────────────────────
+
+Type 2 diabetes is largely preventable: losing 5–10% of body weight if overweight, eating a diet low in refined carbs and sugar, and exercising regularly reduce risk by up to 58%.
+
+Glycaemic index (GI): low-GI foods (oats, sweet potato, legumes, most fruits) cause slower blood sugar rises than high-GI foods (white bread, white rice, sugary drinks). Pairing carbs with protein, fat, or fibre slows glucose absorption.
+
+Signs of high blood sugar: frequent urination, excessive thirst, fatigue, blurred vision. Type 2 diabetes often has no symptoms for years — regular screening is important for Asian adults over 40 or those with family history.
+
+Exercise improves insulin sensitivity: muscle contractions allow glucose uptake without insulin. Even a 10-minute walk after meals reduces post-meal blood sugar spikes.
+
+
+# SUPPLEMENTS
+# ───────────
+
+Most healthy people eating a varied diet do not need supplements. However, some are evidence-based:
+
+- Creatine monohydrate: the most well-researched sports supplement. Increases muscle strength and power output by 5–15%. Safe for long-term use. 3–5 g/day; loading phase is optional.
+- Protein powder (whey, casein, plant-based): convenient way to hit daily protein targets. No benefit over food if protein needs are already met.
+- Vitamin D (1,000–2,000 IU/day): most people with limited sun exposure benefit.
+- Omega-3 fish oil (EPA + DHA, 1–2 g/day): reduces inflammation and triglycerides, supports brain health.
+- Magnesium glycinate or malate (200–400 mg/day): may improve sleep quality and reduce muscle cramps.
+- Caffeine: 3–6 mg/kg body weight 30–60 minutes before exercise improves endurance performance, alertness, and strength.
+
+
+# POSTURE & ERGONOMICS
+# ────────────────────
+
+Poor posture at a desk causes neck pain, lower back pain, and headaches — common issues for office workers and students.
+
+Ergonomics checklist:
+- Monitor top should be at or just below eye level, arm's length away.
+- Elbows at 90°, wrists neutral (not bent up or down).
+- Hips slightly above knees, feet flat on the floor or a footrest.
+- Lower back supported by chair lumbar support or a rolled towel.
+
+Neck and shoulder relief: chin tucks (gently retract head, hold 5 s, repeat 10×) strengthen deep neck flexors and counteract forward head posture.
+
+Lower back: strengthening the core prevents and relieves back pain more effectively than rest. Cat-cow stretch, bird-dog, and dead bug are safe exercises.
+
+Standing desks: alternating between sitting and standing (30 min each) is better than standing all day.
+
+
+# RECOVERY
+# ────────
+
+Active recovery (light movement — walking, yoga, easy cycling) on rest days promotes blood flow and reduces muscle soreness better than complete rest.
+
+Sleep is the most powerful recovery tool. Growth hormone is released primarily during deep NREM sleep; this is when muscle repair occurs.
+
+Nutrition for recovery: consume protein (20–40 g) and carbohydrates within 30–60 minutes after intense exercise. Tart cherry juice (240 ml) has evidence for reducing muscle soreness.
+
+Cold water immersion (10–15 °C, 10–15 minutes) reduces acute muscle soreness and perceived fatigue after intense exercise.
+
+Signs you need more recovery: persistent muscle soreness beyond 72 hours, reduced motivation, declining performance, disrupted sleep, or elevated resting heart rate.
+
+
+# COMMON WELLNESS MYTHS
+# ─────────────────────
+
+Myth: "You need to detox your liver/kidneys with juices or cleanses."
+Fact: The liver and kidneys detoxify continuously. No supplement or juice accelerates this.
+
+Myth: "Eating fat makes you fat."
+Fact: Excess calories cause fat gain, regardless of source. Dietary fat is essential and does not directly cause weight gain.
+
+Myth: "Muscle turns to fat if you stop training."
+Fact: Muscle and fat are different tissues and cannot convert to each other. When training stops, muscle shrinks; fat may increase if caloric intake stays the same.
+
+Myth: "Cardio is the best way to lose weight."
+Fact: Diet is the primary driver of fat loss. Strength training is at least as effective as cardio and preserves muscle while losing weight.
+
+Myth: "Stretching before exercise prevents injury."
+Fact: Static stretching before exercise can reduce power output. Dynamic warm-up is more effective. Static stretching is best done after exercise.

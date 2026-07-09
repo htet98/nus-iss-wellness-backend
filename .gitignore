@@ -33,6 +33,7 @@ out/
 .settings/
 .springBeans
 .sts4-cache
+.run
 
 # ============================================================
 # VS Code
@@ -42,11 +43,12 @@ out/
 # ============================================================
 # Environment / Secrets
 # ============================================================
-.env
+wellness-ai-service/.env
 *.env
 application-local.properties
 application-local.yml
 application-secret.properties
+.pydevproject
 
 # ============================================================
 # Logs
@@ -54,6 +56,7 @@ application-secret.properties
 logs/
 *.log
 spring.log
+generated-jwts.txt
 
 # ============================================================
 # OS
@@ -61,3 +64,5 @@ spring.log
 .DS_Store
 Thumbs.db
 Desktop.ini
+generated-jwts.txt
+generated-jwts.txt
