@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
+//author: Junior
+
 @Entity
 @Table(name = "user_profile")
 public class UserProfile {

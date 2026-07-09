@@ -30,9 +30,7 @@ public class JwtService {
                 expirationMinutes * 60 * 1000;
     }
 
-    // ==========================================================
     // Generate JWT
-    // ==========================================================
     public String generateToken(String username, String role) {
 
         Date now = new Date();
@@ -49,9 +47,7 @@ public class JwtService {
                 .compact();
     }
 
-    // ==========================================================
     // Parse JWT
-    // ==========================================================
     public Claims authenticateToken(String token) {
 
         return Jwts.parser()

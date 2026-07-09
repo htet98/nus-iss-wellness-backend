@@ -34,10 +34,7 @@ public class UserProfileService {
         this.profileRepository = profileRepository;
     }
 
-    // =====================================================
     // Get Profile
-    // =====================================================
-
     public UserProfileResponse getProfile(String username) {
 
 
@@ -48,10 +45,7 @@ public class UserProfileService {
         return convertToResponse(profile);
     }
 
-    // =====================================================
     // Update Profile
-    // =====================================================
-
     public UserProfileResponse updateProfile(
             String username,
             UserProfileRequest request) {
@@ -90,10 +84,7 @@ public class UserProfileService {
         return convertToResponse(updatedProfile);
     }
 
-    // =====================================================
     // Delete Profile
-    // =====================================================
-
     public void deleteProfile(String username) {
 
         User user = getUser(username);
@@ -103,10 +94,7 @@ public class UserProfileService {
         profileRepository.delete(profile);
     }
 
-    // =====================================================
     // Helper Methods
-    // =====================================================
-
     private User getUser(String username) {
 
         return userRepository.findByUsername(username)
